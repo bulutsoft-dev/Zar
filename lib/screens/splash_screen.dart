@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 import '../utils/app_colors.dart';
 import '../utils/constants.dart';
+import '../services/ad_service.dart';
 import 'home_screen.dart';
 
 /// Splash screen with animation
@@ -19,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<double> _rotateAnimation;
+  bool _isNavigating = false;
   
   @override
   void initState() {
@@ -51,33 +53,60 @@ class _SplashScreenState extends State<SplashScreen>
     
     _controller.forward();
     
-    Timer(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                const HomeScreen(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0.0, 0.3),
-                    end: Offset.zero,
-                  ).animate(CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOutCubic,
-                  )),
-                  child: child,
-                ),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 800),
-          ),
-        );
-      }
-    });
+    // App Open reklamı yükle
+    _loadAndShowAppOpenAd();
+  }
+  
+  Future<void> _loadAndShowAppOpenAd() async {
+    // Reklamı yükle
+    await AdService.loadAppOpenAd();
+    
+    // Animasyonun tamamlanmasını bekle (2 saniye)
+    await Future.delayed(const Duration(seconds: 2));
+    
+    if (!mounted || _isNavigating) return;
+    
+    // Reklam yüklendiyse göster
+    if (AdService.isAppOpenAdReady) {
+      await AdService.showAppOpenAd(
+        onAdDismissed: () {
+          _navigateToHome();
+        },
+      );
+    } else {
+      // Reklam yüklenmediyse direkt geç
+      _navigateToHome();
+    }
+  }
+  
+  void _navigateToHome() {
+    if (!mounted || _isNavigating) return;
+    
+    _isNavigating = true;
+    
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const HomeScreen(),
+        transitionsBuilder:
+            (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.3),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutCubic,
+              )),
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 800),
+      ),
+    );
   }
   
   @override

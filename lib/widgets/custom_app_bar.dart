@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
+import '../services/ad_service.dart';
 import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import '../screens/saved_sessions_screen.dart';
@@ -240,16 +241,20 @@ class CustomAppBar extends StatelessWidget {
             text: 'Kaydetme',
           ),
           AppButton(
-            onPressed: () {
-              sessionProvider.saveCurrentSession(
+            onPressed: () async {
+              await sessionProvider.saveCurrentSession(
                 customName: nameController.text,
               );
-              Navigator.pop(context);
-              AppSnackBar.show(
-                context: context,
-                message: 'Oyun kaydedildi!',
-                isSuccess: true,
-              );
+              if (context.mounted) {
+                Navigator.pop(context);
+                AppSnackBar.show(
+                  context: context,
+                  message: 'Oyun kaydedildi!',
+                  isSuccess: true,
+                );
+              }
+              // Session kaydedildikten sonra interstitial reklam göster
+              await AdService.showInterstitialAd();
             },
             text: 'Kaydet',
             icon: Icons.save,

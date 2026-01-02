@@ -10,6 +10,7 @@ import '../utils/constants.dart';
 import '../widgets/dice_widget.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/app_dialog.dart';
+import '../widgets/banner_ad_widget.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
 
@@ -189,7 +190,11 @@ class _HomeScreenState extends State<HomeScreen>
               
               // Roll button
               _buildRollButton(isDark),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              
+              // Banner reklam
+              const BannerAdWidget(),
+              const SizedBox(height: 8),
             ],
           ),
         ),

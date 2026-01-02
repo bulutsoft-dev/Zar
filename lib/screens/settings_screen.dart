@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
+import '../services/ad_service.dart';
 import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import '../widgets/app_dialog.dart';
@@ -554,15 +555,19 @@ class SettingsScreen extends StatelessWidget {
             text: 'Kaydetme',
           ),
           AppButton(
-            onPressed: () {
-              sessionProvider.saveCurrentSession(customName: nameController.text);
-              Navigator.pop(context);
-              Navigator.pop(context); // Close settings screen too
-              AppSnackBar.show(
-                context: context,
-                message: 'Oyun kaydedildi!',
-                isSuccess: true,
-              );
+            onPressed: () async {
+              await sessionProvider.saveCurrentSession(customName: nameController.text);
+              if (context.mounted) {
+                Navigator.pop(context);
+                Navigator.pop(context); // Close settings screen too
+                AppSnackBar.show(
+                  context: context,
+                  message: 'Oyun kaydedildi!',
+                  isSuccess: true,
+                );
+              }
+              // Session kaydedildikten sonra interstitial reklam göster
+              await AdService.showInterstitialAd();
             },
             text: 'Kaydet',
             icon: Icons.save,

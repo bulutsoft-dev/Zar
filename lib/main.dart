@@ -3,10 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/session_provider.dart';
+import 'services/ad_service.dart';
 import 'screens/splash_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Google Mobile Ads SDK'yı başlat
+  await AdService.initialize();
+  
+  // Interstitial reklamı önceden yükle
+  await AdService.loadInterstitialAd();
+  
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
