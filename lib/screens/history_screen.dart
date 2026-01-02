@@ -15,7 +15,8 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProviderStateMixin {
-  late TabController? _tabController;
+  TabController? _tabController;
+  bool _isTabControllerInitialized = false;
   
   @override
   void initState() {
@@ -26,15 +27,17 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
-    final session = sessionProvider.currentSession;
-    
-    if (session != null && session.players.isNotEmpty) {
-      _tabController?.dispose();
-      _tabController = TabController(
-        length: session.players.length + 1, // +1 for "All" tab
-        vsync: this,
-      );
+    if (!_isTabControllerInitialized) {
+      final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+      final session = sessionProvider.currentSession;
+      
+      if (session != null && session.players.isNotEmpty) {
+        _tabController = TabController(
+          length: session.players.length + 1, // +1 for "All" tab
+          vsync: this,
+        );
+        _isTabControllerInitialized = true;
+      }
     }
   }
   

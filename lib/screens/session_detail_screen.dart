@@ -22,6 +22,7 @@ class SessionDetailScreen extends StatefulWidget {
 
 class _SessionDetailScreenState extends State<SessionDetailScreen> with SingleTickerProviderStateMixin {
   TabController? _tabController;
+  bool _isTabControllerInitialized = false;
   
   @override
   void initState() {
@@ -32,17 +33,19 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> with SingleTi
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
-    final session = sessionProvider.savedSessions.firstWhere(
-      (s) => s.id == widget.sessionId,
-    );
-    
-    if (session.players.isNotEmpty) {
-      _tabController?.dispose();
-      _tabController = TabController(
-        length: session.players.length + 1, // +1 for "All" tab
-        vsync: this,
+    if (!_isTabControllerInitialized) {
+      final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+      final session = sessionProvider.savedSessions.firstWhere(
+        (s) => s.id == widget.sessionId,
       );
+      
+      if (session.players.isNotEmpty) {
+        _tabController = TabController(
+          length: session.players.length + 1, // +1 for "All" tab
+          vsync: this,
+        );
+        _isTabControllerInitialized = true;
+      }
     }
   }
   

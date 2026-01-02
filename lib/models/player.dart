@@ -1,7 +1,7 @@
 /// Model representing a player in the game
 class Player {
   final String id;
-  String name;
+  final String name;
   final int order;
 
   Player({
