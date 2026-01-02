@@ -656,6 +656,154 @@
         html {
             scroll-behavior: smooth;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            padding: 3rem;
+            border: 3px solid var(--highlight);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(233, 69, 96, 0.5);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--highlight);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--highlight);
+            color: var(--white);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .modal-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .download-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .download-option {
+            background: var(--accent-dark);
+            padding: 1.5rem;
+            border: 2px solid var(--accent-dark);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .download-option:hover {
+            border-color: var(--highlight);
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+        }
+
+        .download-option-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .download-icon {
+            font-size: 2.5rem;
+        }
+
+        .download-option h3 {
+            color: var(--gold);
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+        }
+
+        .download-option p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-left: 3.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 2rem;
+            }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .download-option {
+                padding: 1rem;
+            }
+
+            .download-icon {
+                font-size: 2rem;
+            }
+
+            .download-option h3 {
+                font-size: 1.1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -693,7 +841,7 @@
                     geliştirilen premium mobil uygulama.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#download" class="btn btn-primary">HEMEN İNDİR</a>
+                    <button onclick="openDownloadModal()" class="btn btn-primary">HEMEN İNDİR</button>
                     <a href="#features" class="btn btn-secondary">DAHA FAZLA BİLGİ</a>
                 </div>
             </div>
@@ -880,9 +1028,36 @@
                 Ücretsiz olarak Android cihazınıza indirin ve premium özelliklerin 
                 keyfini çıkarın.
             </p>
-            <a href="#" class="btn btn-primary">GOOGLE PLAY'DEN İNDİR</a>
+            <button onclick="openDownloadModal()" class="btn btn-primary">GOOGLE PLAY'DEN İNDİR</button>
         </div>
     </section>
+
+    <!-- Download Modal -->
+    <div id="downloadModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeDownloadModal()">&times;</span>
+            <div class="modal-header">
+                <h2>UYGULAMAYI İNDİR</h2>
+                <p>İndirme seçeneğinizi belirleyin</p>
+            </div>
+            <div class="download-options">
+                <a href="https://play.google.com/store/apps/details?id=com.bulutsoft.zar" target="_blank" class="download-option" onclick="closeDownloadModal()">
+                    <div class="download-option-header">
+                        <span class="download-icon">🛒</span>
+                        <h3>Google Play Store</h3>
+                    </div>
+                    <p>Resmi mağazadan uygulamayı indirin</p>
+                </a>
+                <a href="https://play.google.com/apps/internaltest/4701405837885319162" target="_blank" class="download-option" onclick="closeDownloadModal()">
+                    <div class="download-option-header">
+                        <span class="download-icon">🧪</span>
+                        <h3>Dahili Test Sürümü</h3>
+                    </div>
+                    <p>En yeni özellikleri test edin (Beta)</p>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -973,6 +1148,41 @@
                 randomDice.style.transform = 'scale(1) rotate(0deg)';
             }, 200);
         }, 2000);
+
+        // Modal functions
+        function openDownloadModal() {
+            const modal = document.getElementById('downloadModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Add event listeners when modal is opened
+            modal.addEventListener('click', closeOnOutsideClick);
+            document.addEventListener('keydown', closeOnEscape);
+        }
+
+        function closeDownloadModal() {
+            const modal = document.getElementById('downloadModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Remove event listeners when modal is closed
+            modal.removeEventListener('click', closeOnOutsideClick);
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+
+        // Close modal when clicking outside
+        function closeOnOutsideClick(e) {
+            if (e.target.id === 'downloadModal') {
+                closeDownloadModal();
+            }
+        }
+
+        // Close modal with ESC key
+        function closeOnEscape(e) {
+            if (e.key === 'Escape') {
+                closeDownloadModal();
+            }
+        }
     </script>
 </body>
 </html>
