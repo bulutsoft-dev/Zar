@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
 import '../utils/app_colors.dart';
+import '../widgets/app_dialog.dart';
 import 'session_detail_screen.dart';
 
 /// Screen showing all saved game sessions
@@ -64,6 +65,21 @@ class SavedSessionsScreen extends StatelessWidget {
                       onPressed: () => Navigator.pop(context),
                     ),
                     const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [AppColors.highlightColor, AppColors.neonPurple],
+                        ),
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      child: const Icon(
+                        Icons.folder,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Kayıtlı Oyunlar',
@@ -143,6 +159,7 @@ class SavedSessionsScreen extends StatelessWidget {
     SessionProvider sessionProvider,
   ) {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+    final hasPlayers = session.players.isNotEmpty;
     
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -236,6 +253,23 @@ class SavedSessionsScreen extends StatelessWidget {
                                     : AppColors.textDark.withOpacity(0.5),
                               ),
                             ),
+                            if (hasPlayers) ...[
+                              const SizedBox(width: 12),
+                              Icon(
+                                Icons.group,
+                                size: 14,
+                                color: AppColors.highlightColor,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${session.players.length} oyuncu',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.highlightColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ],
@@ -329,31 +363,39 @@ class SavedSessionsScreen extends StatelessWidget {
     dynamic session,
     SessionProvider sessionProvider,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
-        title: const Text('Oyunu Sil'),
-        content: Text('${session.name} oyununu silmek istediğinizden emin misiniz?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+      builder: (context) => AppDialog(
+        title: 'Oyunu Sil',
+        icon: Icons.delete_outline,
+        iconColor: Colors.red,
+        content: Text(
+          '"${session.name}" oyununu silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz.',
+          style: TextStyle(
+            fontSize: 16,
+            color: isDark ? Colors.white.withOpacity(0.8) : AppColors.textDark,
+            height: 1.5,
           ),
-          ElevatedButton(
+        ),
+        actions: [
+          AppTextButton(
+            onPressed: () => Navigator.pop(context),
+            text: 'İptal',
+          ),
+          AppButton(
             onPressed: () {
               sessionProvider.deleteSession(session.id);
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Oyun silindi')),
+              AppSnackBar.show(
+                context: context,
+                message: 'Oyun silindi',
+                icon: Icons.delete,
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.highlightColor,
-            ),
-            child: const Text('Sil'),
+            text: 'Sil',
+            icon: Icons.delete,
           ),
         ],
       ),

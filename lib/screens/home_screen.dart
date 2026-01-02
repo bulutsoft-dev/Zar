@@ -9,7 +9,9 @@ import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import '../widgets/dice_widget.dart';
 import '../widgets/custom_app_bar.dart';
+import '../widgets/app_dialog.dart';
 import 'history_screen.dart';
+import 'settings_screen.dart';
 
 /// Main home screen with dice rolling
 class HomeScreen extends StatefulWidget {
@@ -89,13 +91,10 @@ class _HomeScreenState extends State<HomeScreen>
   int get totalValue => diceValues.fold(0, (sum, value) => sum + value);
   
   void _startNewGame() {
-    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
-    sessionProvider.startNewSession();
-    HapticFeedback.selectionClick();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Yeni oyun başlatıldı!'),
-        duration: Duration(seconds: 2),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NewGameSetupScreen(),
       ),
     );
   }
@@ -199,6 +198,9 @@ class _HomeScreenState extends State<HomeScreen>
   }
   
   Widget _buildSessionIndicator(bool isDark, SessionProvider sessionProvider) {
+    final currentPlayer = sessionProvider.currentPlayer;
+    final hasPlayers = sessionProvider.hasPlayers;
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -223,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen>
       child: Row(
         children: [
           Icon(
-            Icons.play_circle_filled,
+            hasPlayers ? Icons.person : Icons.play_circle_filled,
             color: AppColors.highlightColor,
             size: 20,
           ),
@@ -232,27 +234,64 @@ class _HomeScreenState extends State<HomeScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  sessionProvider.currentSession?.name ?? 'Oyun',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.textDark,
+                if (hasPlayers && currentPlayer != null) ...[
+                  Text(
+                    'Sıra: ${currentPlayer.name}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.goldColor,
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  '${sessionProvider.currentSession?.totalRolls ?? 0} atış',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: isDark 
-                        ? Colors.white.withOpacity(0.6)
-                        : AppColors.textDark.withOpacity(0.6),
+                  Text(
+                    '${sessionProvider.currentSession?.totalRolls ?? 0} atış • ${sessionProvider.currentPlayers.length} oyuncu',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isDark 
+                          ? Colors.white.withOpacity(0.6)
+                          : AppColors.textDark.withOpacity(0.6),
+                    ),
                   ),
-                ),
+                ] else ...[
+                  Text(
+                    sessionProvider.currentSession?.name ?? 'Oyun',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColors.textDark,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    '${sessionProvider.currentSession?.totalRolls ?? 0} atış',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isDark 
+                          ? Colors.white.withOpacity(0.6)
+                          : AppColors.textDark.withOpacity(0.6),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
+          if (hasPlayers)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.highlightColor, AppColors.neonPurple],
+                ),
+              ),
+              child: Text(
+                '${(sessionProvider.currentSession?.currentPlayerIndex ?? 0) + 1}/${sessionProvider.currentPlayers.length}',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import '../models/game_session.dart';
+import '../models/player.dart';
 import '../utils/constants.dart';
 
 /// Provider for managing game sessions
@@ -21,6 +22,15 @@ class SessionProvider extends ChangeNotifier {
   bool get hasActiveSession => _currentSession != null;
   bool get isInitialized => _isInitialized;
   
+  /// Get current player if there are players in the session
+  Player? get currentPlayer => _currentSession?.currentPlayer;
+  
+  /// Get all players in current session
+  List<Player> get currentPlayers => _currentSession?.players ?? [];
+  
+  /// Check if current session has players
+  bool get hasPlayers => _currentSession?.players.isNotEmpty ?? false;
+  
   Future<void> _initialize() async {
     _prefs = await SharedPreferences.getInstance();
     await _loadSavedSessions();
@@ -28,15 +38,30 @@ class SessionProvider extends ChangeNotifier {
     notifyListeners();
   }
   
-  /// Start a new game session
-  void startNewSession() {
+  /// Start a new game session with optional players
+  void startNewSession({List<String>? playerNames}) {
     final now = DateTime.now();
+    final uuid = const Uuid();
+    
+    List<Player> players = [];
+    if (playerNames != null && playerNames.isNotEmpty) {
+      for (int i = 0; i < playerNames.length; i++) {
+        players.add(Player(
+          id: uuid.v4(),
+          name: playerNames[i].isNotEmpty ? playerNames[i] : 'Oyuncu ${i + 1}',
+          order: i,
+        ));
+      }
+    }
+    
     _currentSession = GameSession(
-      id: const Uuid().v4(),
+      id: uuid.v4(),
       name: 'Oyun ${now.day}/${now.month}/${now.year} ${now.hour}:${now.minute.toString().padLeft(2, '0')}',
       createdAt: now,
       updatedAt: now,
       rolls: [],
+      players: players,
+      currentPlayerIndex: 0,
     );
     notifyListeners();
   }
@@ -48,10 +73,18 @@ class SessionProvider extends ChangeNotifier {
     final roll = DiceRoll(
       values: diceValues,
       timestamp: DateTime.now(),
+      playerId: _currentSession!.currentPlayer?.id,
+      playerName: _currentSession!.currentPlayer?.name,
     );
     
     _currentSession!.rolls.add(roll);
     _currentSession!.updatedAt = DateTime.now();
+    
+    // Move to next player if there are players
+    if (_currentSession!.players.isNotEmpty) {
+      _currentSession!.nextPlayer();
+    }
+    
     notifyListeners();
   }
   
