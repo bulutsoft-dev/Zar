@@ -6,6 +6,8 @@ import '../providers/session_provider.dart';
 import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import '../screens/saved_sessions_screen.dart';
+import '../screens/settings_screen.dart';
+import '../widgets/app_dialog.dart';
 
 /// Custom app bar widget with navigation and theme controls
 class CustomAppBar extends StatelessWidget {
@@ -69,30 +71,14 @@ class CustomAppBar extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        AppConstants.appName,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : AppColors.textDark,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                      Text(
-                        'by ${AppConstants.companyName}',
-                        style: TextStyle(
-                          fontSize: 9,
-                          color: isDark 
-                              ? Colors.white.withOpacity(0.5)
-                              : AppColors.textDark.withOpacity(0.5),
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    AppConstants.appName,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColors.textDark,
+                      letterSpacing: 2,
+                    ),
                   ),
                 ),
               ],
@@ -141,15 +127,20 @@ class CustomAppBar extends StatelessWidget {
                 tooltip: 'Kayıtlı Oyunlar',
               ),
               const SizedBox(width: 4),
-              // Theme toggle
+              // Menu button (replaced theme toggle and bulutsoft branding)
               _buildIconButton(
-                icon: isDark ? Icons.light_mode : Icons.dark_mode,
+                icon: Icons.menu,
                 onPressed: () {
-                  themeProvider.toggleTheme();
                   HapticFeedback.selectionClick();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    ),
+                  );
                 },
                 isDark: isDark,
-                tooltip: isDark ? 'Açık Tema' : 'Koyu Tema',
+                tooltip: 'Menü',
               ),
             ],
           ),
@@ -185,49 +176,83 @@ class CustomAppBar extends StatelessWidget {
     final TextEditingController nameController = TextEditingController(
       text: sessionProvider.currentSession?.name ?? '',
     );
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
-        title: const Text('Oyunu Bitir'),
+      builder: (context) => AppDialog(
+        title: 'Oyunu Bitir',
+        icon: Icons.stop_circle_outlined,
         content: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Bu oyunu kaydetmek istiyor musunuz?'),
+            Text(
+              'Bu oyunu kaydetmek istiyor musunuz?',
+              style: TextStyle(
+                fontSize: 16,
+                color: isDark ? Colors.white.withOpacity(0.8) : AppColors.textDark,
+              ),
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(
+              style: TextStyle(
+                color: isDark ? Colors.white : AppColors.textDark,
+              ),
+              decoration: InputDecoration(
                 labelText: 'Oyun Adı',
-                border: OutlineInputBorder(
+                labelStyle: TextStyle(
+                  color: isDark
+                      ? Colors.white.withOpacity(0.6)
+                      : AppColors.textDark.withOpacity(0.6),
+                ),
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.zero,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.zero,
+                  borderSide: BorderSide(
+                    color: isDark
+                        ? Colors.white.withOpacity(0.3)
+                        : AppColors.textDark.withOpacity(0.3),
+                  ),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.zero,
+                  borderSide: BorderSide(color: AppColors.highlightColor),
                 ),
               ),
             ),
           ],
         ),
         actions: [
-          TextButton(
+          AppTextButton(
             onPressed: () {
               sessionProvider.clearCurrentSession();
               Navigator.pop(context);
+              AppSnackBar.show(
+                context: context,
+                message: 'Oyun kaydedilmeden silindi',
+                icon: Icons.delete_outline,
+              );
             },
-            child: const Text('Kaydetme'),
+            text: 'Kaydetme',
           ),
-          ElevatedButton(
+          AppButton(
             onPressed: () {
               sessionProvider.saveCurrentSession(
                 customName: nameController.text,
               );
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Oyun kaydedildi!')),
+              AppSnackBar.show(
+                context: context,
+                message: 'Oyun kaydedildi!',
+                isSuccess: true,
               );
             },
-            child: const Text('Kaydet'),
+            text: 'Kaydet',
+            icon: Icons.save,
           ),
         ],
       ),

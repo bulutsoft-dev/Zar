@@ -4,10 +4,45 @@ import 'package:intl/intl.dart';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
 import '../utils/app_colors.dart';
+import '../models/player.dart';
 
 /// Screen showing history of current session
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
+  
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProviderStateMixin {
+  late TabController? _tabController;
+  
+  @override
+  void initState() {
+    super.initState();
+    _tabController = null;
+  }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final session = sessionProvider.currentSession;
+    
+    if (session != null && session.players.isNotEmpty) {
+      _tabController?.dispose();
+      _tabController = TabController(
+        length: session.players.length + 1, // +1 for "All" tab
+        vsync: this,
+      );
+    }
+  }
+  
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -33,6 +68,8 @@ class HistoryScreen extends StatelessWidget {
         ),
       );
     }
+    
+    final hasPlayers = session.players.isNotEmpty;
     
     return Scaffold(
       body: Container(
@@ -96,7 +133,7 @@ class HistoryScreen extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            '${session.totalRolls} atış',
+                            '${session.totalRolls} atış${hasPlayers ? ' • ${session.players.length} oyuncu' : ''}',
                             style: TextStyle(
                               fontSize: 12,
                               color: isDark 
@@ -159,48 +196,197 @@ class HistoryScreen extends StatelessWidget {
                 ),
               ),
               
+              // Player tabs (if there are players)
+              if (hasPlayers && _tabController != null) ...[
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? Colors.white.withOpacity(0.05)
+                        : Colors.black.withOpacity(0.03),
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.1)
+                          : Colors.black.withOpacity(0.1),
+                    ),
+                  ),
+                  child: TabBar(
+                    controller: _tabController,
+                    isScrollable: true,
+                    indicatorColor: AppColors.highlightColor,
+                    indicatorWeight: 3,
+                    labelColor: AppColors.highlightColor,
+                    unselectedLabelColor: isDark
+                        ? Colors.white.withOpacity(0.5)
+                        : AppColors.textDark.withOpacity(0.5),
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    tabs: [
+                      const Tab(text: 'Tümü'),
+                      ...session.players.map((p) => Tab(text: p.name)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+              
               // History list
               Expanded(
-                child: session.rolls.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.history,
-                              size: 64,
-                              color: isDark 
-                                  ? Colors.white.withOpacity(0.3)
-                                  : AppColors.textDark.withOpacity(0.3),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Henüz atış yok',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: isDark 
-                                    ? Colors.white.withOpacity(0.5)
-                                    : AppColors.textDark.withOpacity(0.5),
-                              ),
-                            ),
-                          ],
-                        ),
+                child: hasPlayers && _tabController != null
+                    ? TabBarView(
+                        controller: _tabController,
+                        children: [
+                          // All rolls
+                          _buildRollsList(session.rolls, session, isDark, showPlayer: true),
+                          // Player-specific rolls
+                          ...session.players.map((player) => _buildPlayerRollsList(
+                            session,
+                            player,
+                            isDark,
+                          )),
+                        ],
                       )
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: session.rolls.length,
-                        reverse: true,
-                        itemBuilder: (context, index) {
-                          final roll = session.rolls[session.rolls.length - 1 - index];
-                          final rollNumber = session.rolls.length - index;
-                          return _buildRollCard(roll, rollNumber, isDark);
-                        },
-                      ),
+                    : _buildRollsList(session.rolls, session, isDark),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+  
+  Widget _buildPlayerRollsList(dynamic session, Player player, bool isDark) {
+    final playerRolls = session.getRollsForPlayer(player.id);
+    final playerTotal = session.getPlayerTotal(player.id);
+    
+    return Column(
+      children: [
+        // Player stats
+        Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.goldColor.withOpacity(0.2),
+                AppColors.highlightColor.withOpacity(0.1),
+              ],
+            ),
+            border: Border.all(
+              color: AppColors.goldColor.withOpacity(0.3),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  Icon(Icons.person, color: AppColors.goldColor, size: 24),
+                  const SizedBox(height: 4),
+                  Text(
+                    player.name,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColors.textDark,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    '${playerRolls.length}',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColors.textDark,
+                    ),
+                  ),
+                  Text(
+                    'Atış',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark
+                          ? Colors.white.withOpacity(0.6)
+                          : AppColors.textDark.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    '$playerTotal',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.goldColor,
+                    ),
+                  ),
+                  Text(
+                    'Toplam',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark
+                          ? Colors.white.withOpacity(0.6)
+                          : AppColors.textDark.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        // Player rolls
+        Expanded(
+          child: _buildRollsList(playerRolls, session, isDark, startIndex: 1),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildRollsList(List<dynamic> rolls, dynamic session, bool isDark, {bool showPlayer = false, int startIndex = 0}) {
+    if (rolls.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.history,
+              size: 64,
+              color: isDark 
+                  ? Colors.white.withOpacity(0.3)
+                  : AppColors.textDark.withOpacity(0.3),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Henüz atış yok',
+              style: TextStyle(
+                fontSize: 18,
+                color: isDark 
+                    ? Colors.white.withOpacity(0.5)
+                    : AppColors.textDark.withOpacity(0.5),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: rolls.length,
+      reverse: true,
+      itemBuilder: (context, index) {
+        final roll = rolls[rolls.length - 1 - index];
+        final rollNumber = startIndex == 0 
+            ? session.rolls.indexOf(roll) + 1
+            : rolls.length - index;
+        return _buildRollCard(roll, rollNumber, isDark, showPlayer: showPlayer);
+      },
     );
   }
   
@@ -234,7 +420,7 @@ class HistoryScreen extends StatelessWidget {
     );
   }
   
-  Widget _buildRollCard(dynamic roll, int rollNumber, bool isDark) {
+  Widget _buildRollCard(dynamic roll, int rollNumber, bool isDark, {bool showPlayer = false}) {
     final timeFormat = DateFormat('HH:mm:ss');
     
     return Container(
@@ -292,10 +478,32 @@ class HistoryScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                if (showPlayer && roll.playerName != null) ...[
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.person,
+                        size: 14,
+                        color: AppColors.highlightColor,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        roll.playerName,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.highlightColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                ],
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
                   children: [
                     ...roll.values.map((v) => Container(
-                          margin: const EdgeInsets.only(right: 8),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
