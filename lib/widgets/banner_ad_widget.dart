@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../services/ad_config.dart';
 
-/// Banner reklam widget'ı
+/// Banner reklam widget'ı - Sabit yükseklikte, yüklenene kadar boş alan gösterir
 class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({super.key});
 
@@ -13,6 +13,9 @@ class BannerAdWidget extends StatefulWidget {
 class _BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
+  bool _loadFailed = false;
+  int _retryCount = 0;
+  static const int _maxRetries = 3;
 
   @override
   void initState() {
@@ -21,6 +24,12 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   }
 
   void _loadBannerAd() {
+    if (_retryCount >= _maxRetries) {
+      debugPrint('Banner ad max retries reached, giving up');
+      return;
+    }
+
+    _bannerAd?.dispose();
     _bannerAd = BannerAd(
       adUnitId: AdConfig.bannerAdUnitId,
       size: AdSize.banner,
@@ -31,6 +40,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
           if (mounted) {
             setState(() {
               _isLoaded = true;
+              _loadFailed = false;
             });
           }
         },
@@ -38,6 +48,22 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
           debugPrint('Banner ad failed to load: $error');
           ad.dispose();
           _bannerAd = null;
+          _retryCount++;
+          
+          if (mounted) {
+            setState(() {
+              _loadFailed = true;
+            });
+            
+            // 5 saniye sonra tekrar dene
+            if (_retryCount < _maxRetries) {
+              Future.delayed(const Duration(seconds: 5), () {
+                if (mounted) {
+                  _loadBannerAd();
+                }
+              });
+            }
+          }
         },
         onAdOpened: (ad) {
           debugPrint('Banner ad opened');
@@ -59,31 +85,20 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isLoaded || _bannerAd == null) {
-      // Reklam yüklenene kadar boş alan göster
-      return const SizedBox(
-        height: 50,
-        child: Center(
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Colors.white38,
-            ),
-          ),
-        ),
+    // Sabit yükseklik - reklam yüklense de yüklenmese de aynı alan
+    const double adHeight = 50.0;
+    
+    // Reklam yüklendiyse göster
+    if (_isLoaded && _bannerAd != null) {
+      return Container(
+        width: _bannerAd!.size.width.toDouble(),
+        height: _bannerAd!.size.height.toDouble(),
+        alignment: Alignment.center,
+        child: AdWidget(ad: _bannerAd!),
       );
     }
 
-    return Container(
-      width: _bannerAd!.size.width.toDouble(),
-      height: _bannerAd!.size.height.toDouble(),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: AdWidget(ad: _bannerAd!),
-    );
+    // Reklam yüklenmediyse veya başarısız olduysa - sadece boş alan göster (yanıp sönme yok)
+    return const SizedBox(height: adHeight);
   }
 }

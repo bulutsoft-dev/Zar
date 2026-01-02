@@ -53,20 +53,20 @@ class _SplashScreenState extends State<SplashScreen>
     
     _controller.forward();
     
-    // App Open reklamı yükle
+    // App Open reklamı yükle ve göster
     _loadAndShowAppOpenAd();
   }
   
   Future<void> _loadAndShowAppOpenAd() async {
-    // Reklamı yükle
-    await AdService.loadAppOpenAd();
+    // Reklamı arka planda yüklemeye başla (beklemeden)
+    AdService.loadAppOpenAd();
     
-    // Animasyonun tamamlanmasını bekle (2 saniye)
-    await Future.delayed(const Duration(seconds: 2));
+    // Animasyonun tamamlanmasını bekle (2.5 saniye - reklam yüklenmesi için yeterli süre)
+    await Future.delayed(const Duration(milliseconds: 2500));
     
     if (!mounted || _isNavigating) return;
     
-    // Reklam yüklendiyse göster
+    // Reklam yüklendiyse göster, yüklenmediyse direkt geç
     if (AdService.isAppOpenAdReady) {
       await AdService.showAppOpenAd(
         onAdDismissed: () {
@@ -74,7 +74,8 @@ class _SplashScreenState extends State<SplashScreen>
         },
       );
     } else {
-      // Reklam yüklenmediyse direkt geç
+      // Reklam yüklenmediyse direkt geç - kullanıcıyı bekletme
+      debugPrint('App Open ad not ready, navigating to home');
       _navigateToHome();
     }
   }

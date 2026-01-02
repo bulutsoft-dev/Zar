@@ -10,18 +10,33 @@ class AdService {
   static AppOpenAd? _appOpenAd;
   static bool _isAppOpenAdLoading = false;
   static bool _isAppOpenAdShowing = false;
+  static int _appOpenAdRetryCount = 0;
+  static const int _maxRetries = 3;
   
   /// Google Mobile Ads SDK'yı başlat
   static Future<void> initialize() async {
-    await MobileAds.instance.initialize();
-    debugPrint('AdMob SDK initialized');
+    try {
+      await MobileAds.instance.initialize();
+      debugPrint('AdMob SDK initialized');
+    } catch (e) {
+      debugPrint('AdMob SDK initialization failed: $e');
+    }
   }
   
   // ==================== APP OPEN AD ====================
   
-  /// App Open reklamı yükle
-  static Future<void> loadAppOpenAd() async {
+  /// App Open reklamı yükle (retry mekanizması ile)
+  static Future<void> loadAppOpenAd({bool isRetry = false}) async {
     if (_isAppOpenAdLoading || _appOpenAd != null) {
+      return;
+    }
+    
+    if (!isRetry) {
+      _appOpenAdRetryCount = 0;
+    }
+    
+    if (_appOpenAdRetryCount >= _maxRetries) {
+      debugPrint('App Open ad max retries reached, giving up');
       return;
     }
     
@@ -35,11 +50,20 @@ class AdService {
           debugPrint('App Open ad loaded successfully');
           _appOpenAd = ad;
           _isAppOpenAdLoading = false;
+          _appOpenAdRetryCount = 0;
         },
         onAdFailedToLoad: (error) {
           debugPrint('App Open ad failed to load: $error');
           _appOpenAd = null;
           _isAppOpenAdLoading = false;
+          _appOpenAdRetryCount++;
+          
+          // Retry after delay
+          if (_appOpenAdRetryCount < _maxRetries) {
+            Future.delayed(const Duration(seconds: 2), () {
+              loadAppOpenAd(isRetry: true);
+            });
+          }
         },
       ),
     );
