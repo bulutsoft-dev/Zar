@@ -19,6 +19,25 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/zarpronolabel_light.png"
+  image_path_android: "assets/zarpronolabel_light.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/zarpronolabel_light.png"
+  adaptive_icon_monochrome: "assets/zarpronolabel_light.png"
+  # Dark mode icon configuration
+  image_path_android_dark: "assets/zarpronolabel_dark.png"
+  adaptive_icon_background_dark: "#1A1A2E"
+  adaptive_icon_foreground_dark: "assets/zarpronolabel_dark.png"
+  adaptive_icon_monochrome_dark: "assets/zarpronolabel_dark.png"
+  min_sdk_android: 21
 
 flutter:
   uses-material-design: true
+  
+  assets:
+    - assets/
