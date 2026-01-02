@@ -12,47 +12,106 @@ void main() {
   runApp(const ZarApp());
 }
 
+// Theme notifier for managing app theme
+class ThemeNotifier extends ChangeNotifier {
+  bool _isDarkMode = true;
+
+  bool get isDarkMode => _isDarkMode;
+
+  void toggleTheme() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
+  }
+}
+
 // Premium renk paleti
 class AppColors {
+  // Dark theme colors
   static const Color primaryDark = Color(0xFF1A1A2E);
   static const Color secondaryDark = Color(0xFF16213E);
   static const Color accentColor = Color(0xFF0F3460);
   static const Color highlightColor = Color(0xFFE94560);
   static const Color goldColor = Color(0xFFFFD700);
   static const Color neonPurple = Color(0xFF9B59B6);
+  
+  // Light theme colors
+  static const Color primaryLight = Color(0xFFF5F5F5);
+  static const Color secondaryLight = Color(0xFFFFFFFF);
+  static const Color accentLight = Color(0xFFE8E8E8);
+  static const Color highlightLight = Color(0xFFE94560);
+  static const Color textDark = Color(0xFF1A1A2E);
 }
 
-class ZarApp extends StatelessWidget {
+class ZarApp extends StatefulWidget {
   const ZarApp({super.key});
 
   @override
+  State<ZarApp> createState() => _ZarAppState();
+}
+
+class _ZarAppState extends State<ZarApp> {
+  final ThemeNotifier _themeNotifier = ThemeNotifier();
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Zar Pro',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: AppColors.highlightColor,
-        scaffoldBackgroundColor: AppColors.primaryDark,
-        useMaterial3: true,
-        fontFamily: 'Roboto',
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
-          ),
-          bodyLarge: TextStyle(
-            letterSpacing: 1.2,
-          ),
+    return AnimatedBuilder(
+      animation: _themeNotifier,
+      builder: (context, _) {
+        return MaterialApp(
+          title: 'Zar Pro',
+          debugShowCheckedModeBanner: false,
+          theme: _themeNotifier.isDarkMode ? _darkTheme() : _lightTheme(),
+          home: SplashScreen(themeNotifier: _themeNotifier),
+        );
+      },
+    );
+  }
+
+  ThemeData _darkTheme() {
+    return ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: AppColors.highlightColor,
+      scaffoldBackgroundColor: AppColors.primaryDark,
+      useMaterial3: true,
+      fontFamily: 'Roboto',
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2,
+        ),
+        bodyLarge: TextStyle(
+          letterSpacing: 1.2,
         ),
       ),
-      home: const SplashScreen(),
+    );
+  }
+
+  ThemeData _lightTheme() {
+    return ThemeData(
+      brightness: Brightness.light,
+      primaryColor: AppColors.highlightLight,
+      scaffoldBackgroundColor: AppColors.primaryLight,
+      useMaterial3: true,
+      fontFamily: 'Roboto',
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2,
+          color: AppColors.textDark,
+        ),
+        bodyLarge: TextStyle(
+          letterSpacing: 1.2,
+          color: AppColors.textDark,
+        ),
+      ),
     );
   }
 }
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final ThemeNotifier themeNotifier;
+  
+  const SplashScreen({super.key, required this.themeNotifier});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -101,7 +160,7 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                const DiceScreen(),
+                DiceScreen(themeNotifier: widget.themeNotifier),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return FadeTransition(
@@ -162,7 +221,7 @@ class _SplashScreenState extends State<SplashScreen>
                         width: 160,
                         height: 160,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(32),
+                          borderRadius: BorderRadius.circular(0), // Sharp corners
                           gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -249,7 +308,7 @@ class _SplashScreenState extends State<SplashScreen>
                           AppColors.highlightColor,
                         ),
                         minHeight: 3,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(0), // Sharp corners
                       ),
                     ),
                   ),
@@ -264,7 +323,9 @@ class _SplashScreenState extends State<SplashScreen>
 }
 
 class DiceScreen extends StatefulWidget {
-  const DiceScreen({super.key});
+  final ThemeNotifier themeNotifier;
+  
+  const DiceScreen({super.key, required this.themeNotifier});
 
   @override
   State<DiceScreen> createState() => _DiceScreenState();
@@ -349,17 +410,24 @@ class _DiceScreenState extends State<DiceScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = widget.themeNotifier.isDarkMode;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              AppColors.primaryDark,
-              AppColors.secondaryDark,
-              AppColors.accentColor,
-            ],
+            colors: isDark
+                ? [
+                    AppColors.primaryDark,
+                    AppColors.secondaryDark,
+                    AppColors.accentColor,
+                  ]
+                : [
+                    AppColors.primaryLight,
+                    AppColors.accentLight,
+                    AppColors.secondaryLight,
+                  ],
           ),
         ),
         child: SafeArea(
@@ -398,14 +466,13 @@ class _DiceScreenState extends State<DiceScreen>
                           value: entry.value,
                           isRolling: isRolling,
                           index: entry.key,
+                          isDarkMode: isDark,
                         );
                       }).toList(),
                     ),
                   ),
                 ),
               ),
-              // Roll history
-              if (rollHistory.isNotEmpty) _buildRollHistory(),
               // Roll button
               _buildRollButton(),
               const SizedBox(height: 24),
@@ -417,46 +484,116 @@ class _DiceScreenState extends State<DiceScreen>
   }
 
   Widget _buildAppBar() {
+    final isDark = widget.themeNotifier.isDarkMode;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.highlightColor, AppColors.neonPurple],
-              ),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.highlightColor.withOpacity(0.3),
-                  blurRadius: 15,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.casino,
-              color: Colors.white,
-              size: 28,
-            ),
+      decoration: BoxDecoration(
+        color: isDark 
+            ? AppColors.secondaryDark.withOpacity(0.5)
+            : AppColors.secondaryLight,
+        border: Border(
+          bottom: BorderSide(
+            color: isDark 
+                ? Colors.white.withOpacity(0.1)
+                : Colors.black.withOpacity(0.1),
+            width: 1,
           ),
-          const SizedBox(width: 12),
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [Colors.white, Color(0xFFC0C0C0)],
-            ).createShader(bounds),
-            child: const Text(
-              'ZAR PRO',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 3,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Logo and title
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppColors.highlightColor, AppColors.neonPurple],
+                  ),
+                  borderRadius: BorderRadius.circular(0), // Sharp corners
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.highlightColor.withOpacity(0.3),
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.casino,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
-            ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShaderMask(
+                    shaderCallback: (bounds) => LinearGradient(
+                      colors: isDark 
+                          ? [Colors.white, const Color(0xFFC0C0C0)]
+                          : [AppColors.textDark, AppColors.textDark],
+                    ).createShader(bounds),
+                    child: Text(
+                      'ZAR PRO',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : AppColors.textDark,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'by Bulutsoft',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: isDark 
+                          ? Colors.white.withOpacity(0.5)
+                          : AppColors.textDark.withOpacity(0.5),
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // Theme toggle and history button
+          Row(
+            children: [
+              // History button
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HistoryScreen(
+                        rollHistory: rollHistory,
+                        themeNotifier: widget.themeNotifier,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.history,
+                  color: isDark ? Colors.white : AppColors.textDark,
+                ),
+              ),
+              // Theme toggle
+              IconButton(
+                onPressed: () {
+                  widget.themeNotifier.toggleTheme();
+                  HapticFeedback.selectionClick();
+                },
+                icon: Icon(
+                  isDark ? Icons.light_mode : Icons.dark_mode,
+                  color: isDark ? Colors.white : AppColors.textDark,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -464,6 +601,7 @@ class _DiceScreenState extends State<DiceScreen>
   }
 
   Widget _buildDiceSelector() {
+    final isDark = widget.themeNotifier.isDarkMode;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
@@ -471,14 +609,21 @@ class _DiceScreenState extends State<DiceScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.white.withOpacity(0.1),
-            Colors.white.withOpacity(0.05),
-          ],
+          colors: isDark
+              ? [
+                  Colors.white.withOpacity(0.1),
+                  Colors.white.withOpacity(0.05),
+                ]
+              : [
+                  Colors.black.withOpacity(0.05),
+                  Colors.black.withOpacity(0.02),
+                ],
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(0), // Sharp corners
         border: Border.all(
-          color: Colors.white.withOpacity(0.1),
+          color: isDark 
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -489,7 +634,9 @@ class _DiceScreenState extends State<DiceScreen>
             children: [
               Icon(
                 Icons.tune,
-                color: Colors.white.withOpacity(0.7),
+                color: isDark 
+                    ? Colors.white.withOpacity(0.7)
+                    : AppColors.textDark.withOpacity(0.7),
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -498,7 +645,9 @@ class _DiceScreenState extends State<DiceScreen>
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white.withOpacity(0.7),
+                  color: isDark 
+                      ? Colors.white.withOpacity(0.7)
+                      : AppColors.textDark.withOpacity(0.7),
                   letterSpacing: 2,
                 ),
               ),
@@ -531,12 +680,18 @@ class _DiceScreenState extends State<DiceScreen>
                             ],
                           )
                         : null,
-                    color: isSelected ? null : Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(14),
+                    color: isSelected 
+                        ? null 
+                        : isDark
+                            ? Colors.white.withOpacity(0.1)
+                            : Colors.black.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(0), // Sharp corners
                     border: Border.all(
                       color: isSelected
                           ? Colors.transparent
-                          : Colors.white.withOpacity(0.2),
+                          : isDark
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.black.withOpacity(0.2),
                       width: 1,
                     ),
                     boxShadow: isSelected
@@ -557,7 +712,9 @@ class _DiceScreenState extends State<DiceScreen>
                         fontWeight: FontWeight.bold,
                         color: isSelected
                             ? Colors.white
-                            : Colors.white.withOpacity(0.6),
+                            : isDark
+                                ? Colors.white.withOpacity(0.6)
+                                : AppColors.textDark.withOpacity(0.6),
                       ),
                     ),
                   ),
@@ -571,17 +728,23 @@ class _DiceScreenState extends State<DiceScreen>
   }
 
   Widget _buildTotalDisplay() {
+    final isDark = widget.themeNotifier.isDarkMode;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppColors.goldColor.withOpacity(0.2),
-            AppColors.highlightColor.withOpacity(0.1),
-          ],
+          colors: isDark
+              ? [
+                  AppColors.goldColor.withOpacity(0.2),
+                  AppColors.highlightColor.withOpacity(0.1),
+                ]
+              : [
+                  AppColors.goldColor.withOpacity(0.1),
+                  AppColors.highlightLight.withOpacity(0.05),
+                ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(0), // Sharp corners
         border: Border.all(
           color: AppColors.goldColor.withOpacity(0.3),
           width: 1,
@@ -601,7 +764,9 @@ class _DiceScreenState extends State<DiceScreen>
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Colors.white.withOpacity(0.7),
+              color: isDark 
+                  ? Colors.white.withOpacity(0.7)
+                  : AppColors.textDark.withOpacity(0.7),
               letterSpacing: 2,
             ),
           ),
