@@ -19,11 +19,7 @@ class AppColors {
   static const Color accentColor = Color(0xFF0F3460);
   static const Color highlightColor = Color(0xFFE94560);
   static const Color goldColor = Color(0xFFFFD700);
-  static const Color silverColor = Color(0xFFC0C0C0);
-  static const Color bronzeColor = Color(0xFFCD7F32);
   static const Color neonPurple = Color(0xFF9B59B6);
-  static const Color neonBlue = Color(0xFF3498DB);
-  static const Color neonGreen = Color(0xFF2ECC71);
 }
 
 class ZarApp extends StatelessWidget {
@@ -276,6 +272,10 @@ class DiceScreen extends StatefulWidget {
 
 class _DiceScreenState extends State<DiceScreen>
     with SingleTickerProviderStateMixin {
+  // Configuration constants
+  static const int rollAnimationTicks = 15;
+  static const int maxRollHistory = 5;
+
   int numberOfDice = 1;
   List<int> diceValues = [1];
   final Random random = Random();
@@ -312,13 +312,13 @@ class _DiceScreenState extends State<DiceScreen>
 
     // Animate the roll
     Timer.periodic(const Duration(milliseconds: 80), (timer) {
-      if (timer.tick >= 15) {
+      if (timer.tick >= rollAnimationTicks) {
         timer.cancel();
         _shakeController.stop();
         _shakeController.reset();
 
         // Add to history
-        if (rollHistory.length >= 5) {
+        if (rollHistory.length >= maxRollHistory) {
           rollHistory.removeAt(0);
         }
         rollHistory.add(List.from(diceValues));
@@ -446,7 +446,7 @@ class _DiceScreenState extends State<DiceScreen>
           const SizedBox(width: 12),
           ShaderMask(
             shaderCallback: (bounds) => const LinearGradient(
-              colors: [Colors.white, AppColors.silverColor],
+              colors: [Colors.white, Color(0xFFC0C0C0)],
             ).createShader(bounds),
             child: const Text(
               'ZAR PRO',
