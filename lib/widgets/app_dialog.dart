@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 /// Custom styled dialog matching app theme
 class AppDialog extends StatelessWidget {

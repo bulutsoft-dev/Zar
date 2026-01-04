@@ -13,7 +13,7 @@ import '../widgets/app_dialog.dart';
 import '../widgets/banner_ad_widget.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 /// Main home screen with dice rolling
 class HomeScreen extends StatefulWidget {

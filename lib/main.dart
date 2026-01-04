@@ -7,7 +7,7 @@ import 'providers/session_provider.dart';
 import 'providers/language_provider.dart';
 import 'services/ad_service.dart';
 import 'screens/splash_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

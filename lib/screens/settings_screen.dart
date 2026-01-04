@@ -9,7 +9,7 @@ import '../utils/app_colors.dart';
 import '../widgets/app_dialog.dart';
 import 'saved_sessions_screen.dart';
 import 'how_to_use_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 /// Settings and menu screen with all app functionality
 class SettingsScreen extends StatelessWidget {

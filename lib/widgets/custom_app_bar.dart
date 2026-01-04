@@ -8,7 +8,7 @@ import '../utils/app_colors.dart';
 import '../screens/saved_sessions_screen.dart';
 import '../screens/settings_screen.dart';
 import '../widgets/app_dialog.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 /// Custom app bar widget with navigation and theme controls
 class CustomAppBar extends StatelessWidget {

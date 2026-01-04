@@ -4,7 +4,7 @@ import 'dart:math';
 import '../utils/app_colors.dart';
 import '../services/ad_service.dart';
 import 'home_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 /// Splash screen with animation
 class SplashScreen extends StatefulWidget {
