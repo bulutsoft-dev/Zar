@@ -3,12 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
+import '../providers/language_provider.dart';
 import '../services/ad_service.dart';
 import '../utils/app_colors.dart';
-import '../utils/constants.dart';
 import '../widgets/app_dialog.dart';
 import 'saved_sessions_screen.dart';
 import 'how_to_use_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Settings and menu screen with all app functionality
 class SettingsScreen extends StatelessWidget {
@@ -16,8 +17,10 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final themeProvider = Provider.of<ThemeProvider>(context);
     final sessionProvider = Provider.of<SessionProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
     final isDark = themeProvider.isDarkMode;
 
     return Scaffold(
@@ -57,13 +60,13 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       
                       // Game section
-                      _buildSectionTitle('Oyun', Icons.casino, isDark),
+                      _buildSectionTitle(l10n.game, Icons.casino, isDark),
                       const SizedBox(height: 12),
                       _buildMenuItem(
                         context: context,
                         icon: Icons.play_circle_outline,
-                        title: 'Yeni Oyun Başlat',
-                        subtitle: 'Oyuncu sayısı ve isimlerini seç',
+                        title: l10n.newGame,
+                        subtitle: l10n.newGameDesc,
                         isDark: isDark,
                         onTap: () => _showNewGameDialog(context),
                       ),
@@ -71,16 +74,16 @@ class SettingsScreen extends StatelessWidget {
                         _buildMenuItem(
                           context: context,
                           icon: Icons.stop_circle_outlined,
-                          title: 'Oyunu Bitir',
-                          subtitle: 'Mevcut oyunu kaydet veya at',
+                          title: l10n.endGame,
+                          subtitle: l10n.endGameDesc,
                           isDark: isDark,
                           onTap: () => _showEndSessionDialog(context, sessionProvider),
                         ),
                       _buildMenuItem(
                         context: context,
                         icon: Icons.folder_outlined,
-                        title: 'Kayıtlı Oyunlar',
-                        subtitle: 'Önceki oyunlarını görüntüle',
+                        title: l10n.savedGames,
+                        subtitle: l10n.savedGamesDesc,
                         isDark: isDark,
                         onTap: () {
                           Navigator.push(
@@ -95,20 +98,22 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       
                       // Appearance section
-                      _buildSectionTitle('Görünüm', Icons.palette, isDark),
+                      _buildSectionTitle(l10n.appearance, Icons.palette, isDark),
                       const SizedBox(height: 12),
                       _buildThemeToggle(context, themeProvider, isDark),
+                      const SizedBox(height: 8),
+                      _buildLanguageSelector(context, languageProvider, isDark),
                       
                       const SizedBox(height: 24),
                       
                       // Help section
-                      _buildSectionTitle('Yardım', Icons.help_outline, isDark),
+                      _buildSectionTitle(l10n.help, Icons.help_outline, isDark),
                       const SizedBox(height: 12),
                       _buildMenuItem(
                         context: context,
                         icon: Icons.menu_book,
-                        title: 'Nasıl Kullanılır?',
-                        subtitle: 'Uygulama kullanım kılavuzu',
+                        title: l10n.howToUse,
+                        subtitle: l10n.howToUseDesc,
                         isDark: isDark,
                         onTap: () {
                           Navigator.push(
@@ -122,8 +127,8 @@ class SettingsScreen extends StatelessWidget {
                       _buildMenuItem(
                         context: context,
                         icon: Icons.info_outline,
-                        title: 'Hakkında',
-                        subtitle: 'Uygulama bilgileri',
+                        title: l10n.about,
+                        subtitle: l10n.aboutDesc,
                         isDark: isDark,
                         onTap: () => _showAboutDialog(context, isDark),
                       ),
@@ -139,6 +144,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildAppBar(BuildContext context, bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -180,7 +187,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            'Menü',
+            l10n.menu,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -193,6 +200,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildBulutsoftCard(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -231,23 +240,23 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Bulutsoft',
-                      style: TextStyle(
+                      l10n.companyName,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         letterSpacing: 2,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
-                      'Yazılım Çözümleri',
-                      style: TextStyle(
+                      l10n.softwareSolutions,
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.white70,
                         letterSpacing: 1,
@@ -273,10 +282,10 @@ class SettingsScreen extends StatelessWidget {
                   size: 20,
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Zar Pro, Bulutsoft tarafından sevgiyle geliştirilmiştir.',
-                    style: TextStyle(
+                    l10n.bulutsoftCard,
+                    style: const TextStyle(
                       fontSize: 13,
                       color: Colors.white,
                       height: 1.4,
@@ -403,6 +412,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildThemeToggle(BuildContext context, ThemeProvider themeProvider, bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -444,7 +455,7 @@ class SettingsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Tema',
+                  l10n.theme,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -453,7 +464,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  isDark ? 'Koyu tema aktif' : 'Açık tema aktif',
+                  isDark ? l10n.darkThemeActive : l10n.lightThemeActive,
                   style: TextStyle(
                     fontSize: 12,
                     color: isDark
@@ -473,6 +484,145 @@ class SettingsScreen extends StatelessWidget {
             activeColor: AppColors.highlightColor,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageSelector(BuildContext context, LanguageProvider languageProvider, bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? [
+                  Colors.white.withOpacity(0.08),
+                  Colors.white.withOpacity(0.04),
+                ]
+              : [
+                  Colors.black.withOpacity(0.04),
+                  Colors.black.withOpacity(0.02),
+                ],
+        ),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.highlightColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(0),
+            ),
+            child: Icon(
+              Icons.language,
+              color: AppColors.highlightColor,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.language,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : AppColors.textDark,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  l10n.languageDesc,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isDark
+                        ? Colors.white.withOpacity(0.5)
+                        : AppColors.textDark.withOpacity(0.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Language toggle buttons
+          Container(
+            decoration: BoxDecoration(
+              color: isDark
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.black.withOpacity(0.1),
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withOpacity(0.2)
+                    : Colors.black.withOpacity(0.2),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildLanguageButton(
+                  text: 'TR',
+                  isSelected: languageProvider.isTurkish,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    languageProvider.setLanguage('tr');
+                  },
+                  isDark: isDark,
+                ),
+                _buildLanguageButton(
+                  text: 'EN',
+                  isSelected: languageProvider.isEnglish,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    languageProvider.setLanguage('en');
+                  },
+                  isDark: isDark,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageButton({
+    required String text,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required bool isDark,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          gradient: isSelected
+              ? const LinearGradient(
+                  colors: [AppColors.highlightColor, AppColors.neonPurple],
+                )
+              : null,
+          color: isSelected ? null : Colors.transparent,
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: isSelected
+                ? Colors.white
+                : isDark
+                    ? Colors.white.withOpacity(0.6)
+                    : AppColors.textDark.withOpacity(0.6),
+          ),
+        ),
       ),
     );
   }

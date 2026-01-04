@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Custom styled dialog matching app theme
 class AppDialog extends StatelessWidget {
@@ -130,11 +131,12 @@ class AppDialog extends StatelessWidget {
     required BuildContext context,
     required String title,
     required String message,
-    String confirmText = 'Evet',
-    String cancelText = 'İptal',
+    String? confirmText,
+    String? cancelText,
     IconData? icon,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return showDialog<bool>(
       context: context,
@@ -151,11 +153,11 @@ class AppDialog extends StatelessWidget {
         actions: [
           AppTextButton(
             onPressed: () => Navigator.pop(context, false),
-            text: cancelText,
+            text: cancelText ?? l10n.cancel,
           ),
           AppButton(
             onPressed: () => Navigator.pop(context, true),
-            text: confirmText,
+            text: confirmText ?? l10n.yes,
           ),
         ],
       ),
@@ -167,10 +169,11 @@ class AppDialog extends StatelessWidget {
     required BuildContext context,
     required String title,
     required String message,
-    String buttonText = 'Tamam',
+    String? buttonText,
     IconData? icon,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return showDialog(
       context: context,
@@ -187,7 +190,7 @@ class AppDialog extends StatelessWidget {
         actions: [
           AppButton(
             onPressed: () => Navigator.pop(context),
-            text: buttonText,
+            text: buttonText ?? l10n.ok,
           ),
         ],
       ),
@@ -199,9 +202,10 @@ class AppDialog extends StatelessWidget {
     required BuildContext context,
     required String title,
     required String message,
-    String buttonText = 'Tamam',
+    String? buttonText,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return showDialog(
       context: context,
@@ -219,7 +223,7 @@ class AppDialog extends StatelessWidget {
         actions: [
           AppButton(
             onPressed: () => Navigator.pop(context),
-            text: buttonText,
+            text: buttonText ?? l10n.ok,
           ),
         ],
       ),
@@ -231,9 +235,10 @@ class AppDialog extends StatelessWidget {
     required BuildContext context,
     required String title,
     required String message,
-    String buttonText = 'Tamam',
+    String? buttonText,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return showDialog(
       context: context,
@@ -251,7 +256,7 @@ class AppDialog extends StatelessWidget {
         actions: [
           AppButton(
             onPressed: () => Navigator.pop(context),
-            text: buttonText,
+            text: buttonText ?? l10n.ok,
           ),
         ],
       ),
