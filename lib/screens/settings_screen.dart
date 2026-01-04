@@ -56,7 +56,7 @@ class SettingsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Bulutsoft Card
-                      _buildBulutsoftCard(isDark),
+                      _buildBulutsoftCard(context, isDark),
                       const SizedBox(height: 24),
                       
                       // Game section
@@ -199,7 +199,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBulutsoftCard(bool isDark) {
+  Widget _buildBulutsoftCard(BuildContext context, bool isDark) {
     final l10n = AppLocalizations.of(context)!;
     
     return Container(
@@ -957,7 +957,7 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
                       // Player count selector
                       _buildSectionTitle(l10n.playerCount, Icons.people, isDark),
                       const SizedBox(height: 12),
-                      _buildPlayerCountSelector(isDark),
+                      _buildPlayerCountSelector(context, isDark),
                       const SizedBox(height: 24),
 
                       // Player names
@@ -974,7 +974,7 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        ...List.generate(playerCount, (index) => _buildPlayerNameField(index, isDark)),
+                        ...List.generate(playerCount, (index) => _buildPlayerNameField(context, index, isDark)),
                       ],
                     ],
                   ),
@@ -1075,7 +1075,7 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
     );
   }
 
-  Widget _buildPlayerCountSelector(bool isDark) {
+  Widget _buildPlayerCountSelector(BuildContext context, bool isDark) {
     final l10n = AppLocalizations.of(context)!;
     
     return Container(
@@ -1225,7 +1225,7 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
     );
   }
 
-  Widget _buildPlayerNameField(int index, bool isDark) {
+  Widget _buildPlayerNameField(BuildContext context, int index, bool isDark) {
     final l10n = AppLocalizations.of(context)!;
     
     return Container(
