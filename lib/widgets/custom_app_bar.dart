@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
+import '../providers/language_provider.dart';
 import '../services/ad_service.dart';
 import '../utils/app_colors.dart';
 import '../screens/saved_sessions_screen.dart';
 import '../screens/settings_screen.dart';
 import '../widgets/app_dialog.dart';
+import '../widgets/language_selection_dialog.dart';
 import 'package:zar/l10n/app_localizations.dart';
 
 /// Custom app bar widget with navigation and theme controls
@@ -129,6 +131,9 @@ class CustomAppBar extends StatelessWidget {
                 tooltip: l10n.savedGamesButton,
               ),
               const SizedBox(width: 4),
+              // Language selector button
+              _buildLanguageButton(context, isDark),
+              const SizedBox(width: 4),
               // Menu button (replaced theme toggle and bulutsoft branding)
               _buildIconButton(
                 icon: Icons.menu,
@@ -172,6 +177,38 @@ class CustomAppBar extends StatelessWidget {
       ),
     );
   }
+  
+  Widget _buildLanguageButton(BuildContext context, bool isDark) {
+    final languageProvider = Provider.of<LanguageProvider>(context);
+    
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        showDialog(
+          context: context,
+          builder: (context) => const LanguageSelectionDialog(isFirstLaunch: false),
+        );
+      },
+      child: Container(
+        constraints: const BoxConstraints(
+          minWidth: 40,
+          minHeight: 40,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Center(
+          child: Text(
+            languageProvider.locale.languageCode.toUpperCase(),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : AppColors.textDark,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   
   void _showEndSessionDialog(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;

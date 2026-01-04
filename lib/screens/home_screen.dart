@@ -5,12 +5,14 @@ import 'dart:async';
 import 'dart:math';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
+import '../providers/language_provider.dart';
 import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import '../widgets/dice_widget.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/app_dialog.dart';
 import '../widgets/banner_ad_widget.dart';
+import '../widgets/language_selection_dialog.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'package:zar/l10n/app_localizations.dart';
@@ -38,6 +40,22 @@ class _HomeScreenState extends State<HomeScreen>
       duration: AppConstants.shakeAnimationDuration,
       vsync: this,
     );
+    
+    // Show language selection dialog on first launch
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkFirstLaunch();
+    });
+  }
+  
+  void _checkFirstLaunch() {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    if (languageProvider.isFirstLaunch) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LanguageSelectionDialog(isFirstLaunch: true),
+      );
+    }
   }
   
   @override

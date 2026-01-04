@@ -52,6 +52,7 @@ class ZarApp extends StatelessWidget {
             supportedLocales: const [
               Locale('tr', ''), // Turkish
               Locale('en', ''), // English
+              Locale('de', ''), // German
             ],
             home: const SplashScreen(),
           );

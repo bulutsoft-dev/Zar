@@ -117,5 +117,8 @@
   "newGameButton": "New Game",
   "historyButton": "History",
   "savedGamesButton": "Saved Games",
-  "menuButton": "Menu"
+  "menuButton": "Menu",
+  "german": "Deutsch",
+  "selectLanguage": "Select Language",
+  "selectLanguageDesc": "Please select your preferred language"
 }

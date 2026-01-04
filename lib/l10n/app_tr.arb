@@ -619,5 +619,20 @@
   "menuButton": "Menü",
   "@menuButton": {
     "description": "Menu button tooltip"
+  },
+  
+  "german": "Deutsch",
+  "@german": {
+    "description": "German language"
+  },
+  
+  "selectLanguage": "Dil Seç",
+  "@selectLanguage": {
+    "description": "Select language title"
+  },
+  
+  "selectLanguageDesc": "Lütfen tercih ettiğiniz dili seçin",
+  "@selectLanguageDesc": {
+    "description": "Select language description"
   }
 }

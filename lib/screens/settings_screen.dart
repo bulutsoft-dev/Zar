@@ -585,6 +585,15 @@ class SettingsScreen extends StatelessWidget {
                   },
                   isDark: isDark,
                 ),
+                _buildLanguageButton(
+                  text: 'DE',
+                  isSelected: languageProvider.isGerman,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    languageProvider.setLanguage('de');
+                  },
+                  isDark: isDark,
+                ),
               ],
             ),
           ),
