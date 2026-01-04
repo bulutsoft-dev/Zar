@@ -1,0 +1,623 @@
+{
+  "@@locale": "tr",
+  
+  "appName": "ZAR PRO",
+  "@appName": {
+    "description": "App name"
+  },
+  
+  "appSubtitle": "PROFESYONEl",
+  "@appSubtitle": {
+    "description": "App subtitle"
+  },
+  
+  "companyName": "Bulutsoft",
+  "@companyName": {
+    "description": "Company name"
+  },
+  
+  "byCompany": "by {company}",
+  "@byCompany": {
+    "description": "By company text",
+    "placeholders": {
+      "company": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "diceCount": "ZAR SAYISI",
+  "@diceCount": {
+    "description": "Dice count label"
+  },
+  
+  "total": "TOPLAM",
+  "@total": {
+    "description": "Total label"
+  },
+  
+  "rollDice": "ZAR AT",
+  "@rollDice": {
+    "description": "Roll dice button"
+  },
+  
+  "rolling": "ATILIYOR...",
+  "@rolling": {
+    "description": "Rolling in progress"
+  },
+  
+  "turn": "Sıra: {player}",
+  "@turn": {
+    "description": "Current turn indicator",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "rollsCount": "{count} atış",
+  "@rollsCount": {
+    "description": "Rolls count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "playersCount": "{count} oyuncu",
+  "@playersCount": {
+    "description": "Players count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "menu": "Menü",
+  "@menu": {
+    "description": "Menu title"
+  },
+  
+  "game": "Oyun",
+  "@game": {
+    "description": "Game section title"
+  },
+  
+  "newGame": "Yeni Oyun Başlat",
+  "@newGame": {
+    "description": "New game button"
+  },
+  
+  "newGameDesc": "Oyuncu sayısı ve isimlerini seç",
+  "@newGameDesc": {
+    "description": "New game description"
+  },
+  
+  "endGame": "Oyunu Bitir",
+  "@endGame": {
+    "description": "End game button"
+  },
+  
+  "endGameDesc": "Mevcut oyunu kaydet veya at",
+  "@endGameDesc": {
+    "description": "End game description"
+  },
+  
+  "savedGames": "Kayıtlı Oyunlar",
+  "@savedGames": {
+    "description": "Saved games title"
+  },
+  
+  "savedGamesDesc": "Önceki oyunlarını görüntüle",
+  "@savedGamesDesc": {
+    "description": "Saved games description"
+  },
+  
+  "appearance": "Görünüm",
+  "@appearance": {
+    "description": "Appearance section"
+  },
+  
+  "theme": "Tema",
+  "@theme": {
+    "description": "Theme label"
+  },
+  
+  "darkThemeActive": "Koyu tema aktif",
+  "@darkThemeActive": {
+    "description": "Dark theme active"
+  },
+  
+  "lightThemeActive": "Açık tema aktif",
+  "@lightThemeActive": {
+    "description": "Light theme active"
+  },
+  
+  "language": "Dil",
+  "@language": {
+    "description": "Language label"
+  },
+  
+  "languageDesc": "Uygulama dilini değiştir",
+  "@languageDesc": {
+    "description": "Language description"
+  },
+  
+  "turkish": "Türkçe",
+  "@turkish": {
+    "description": "Turkish language"
+  },
+  
+  "english": "English",
+  "@english": {
+    "description": "English language"
+  },
+  
+  "help": "Yardım",
+  "@help": {
+    "description": "Help section"
+  },
+  
+  "howToUse": "Nasıl Kullanılır?",
+  "@howToUse": {
+    "description": "How to use title"
+  },
+  
+  "howToUseDesc": "Uygulama kullanım kılavuzu",
+  "@howToUseDesc": {
+    "description": "How to use description"
+  },
+  
+  "about": "Hakkında",
+  "@about": {
+    "description": "About title"
+  },
+  
+  "aboutDesc": "Uygulama bilgileri",
+  "@aboutDesc": {
+    "description": "About description"
+  },
+  
+  "bulutsoftCard": "Zar Pro, Bulutsoft tarafından sevgiyle geliştirilmiştir.",
+  "@bulutsoftCard": {
+    "description": "Bulutsoft card text"
+  },
+  
+  "softwareSolutions": "Yazılım Çözümleri",
+  "@softwareSolutions": {
+    "description": "Software solutions"
+  },
+  
+  "endGameTitle": "Oyunu Bitir",
+  "@endGameTitle": {
+    "description": "End game dialog title"
+  },
+  
+  "endGameQuestion": "Bu oyunu kaydetmek istiyor musunuz?",
+  "@endGameQuestion": {
+    "description": "End game question"
+  },
+  
+  "gameName": "Oyun Adı",
+  "@gameName": {
+    "description": "Game name label"
+  },
+  
+  "dontSave": "Kaydetme",
+  "@dontSave": {
+    "description": "Don't save button"
+  },
+  
+  "save": "Kaydet",
+  "@save": {
+    "description": "Save button"
+  },
+  
+  "gameDeletedWithoutSaving": "Oyun kaydedilmeden silindi",
+  "@gameDeletedWithoutSaving": {
+    "description": "Game deleted message"
+  },
+  
+  "gameSaved": "Oyun kaydedildi!",
+  "@gameSaved": {
+    "description": "Game saved message"
+  },
+  
+  "aboutTitle": "Hakkında",
+  "@aboutTitle": {
+    "description": "About dialog title"
+  },
+  
+  "version": "Versiyon 1.0.0",
+  "@version": {
+    "description": "Version text"
+  },
+  
+  "aboutDescription": "Profesyonel zar atma uygulaması. Arkadaşlarınızla oyun oynayın, sonuçları kaydedin ve istatistiklerinizi takip edin.",
+  "@aboutDescription": {
+    "description": "About description"
+  },
+  
+  "developedBy": "Bulutsoft tarafından geliştirilmiştir",
+  "@developedBy": {
+    "description": "Developed by text"
+  },
+  
+  "ok": "Tamam",
+  "@ok": {
+    "description": "OK button"
+  },
+  
+  "newGameTitle": "Yeni Oyun",
+  "@newGameTitle": {
+    "description": "New game screen title"
+  },
+  
+  "playerCount": "Oyuncu Sayısı",
+  "@playerCount": {
+    "description": "Player count label"
+  },
+  
+  "playerNames": "Oyuncu İsimleri (Opsiyonel)",
+  "@playerNames": {
+    "description": "Player names label"
+  },
+  
+  "playerNamesHint": "Boş bırakabilirsiniz, varsayılan isimler kullanılacak",
+  "@playerNamesHint": {
+    "description": "Player names hint"
+  },
+  
+  "player": "Oyuncu {number}",
+  "@player": {
+    "description": "Player label with number",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "startGame": "OYUNU BAŞLAT",
+  "@startGame": {
+    "description": "Start game button"
+  },
+  
+  "singlePlayerMode": "Tek kişilik mod (oyuncu takibi yok)",
+  "@singlePlayerMode": {
+    "description": "Single player mode"
+  },
+  
+  "gameStartedWithPlayers": "Oyun {count} oyuncu ile başlatıldı!",
+  "@gameStartedWithPlayers": {
+    "description": "Game started with players message",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "gameStarted": "Yeni oyun başlatıldı!",
+  "@gameStarted": {
+    "description": "New game started message"
+  },
+  
+  "history": "Geçmiş",
+  "@history": {
+    "description": "History title"
+  },
+  
+  "noActiveGame": "Aktif oyun yok",
+  "@noActiveGame": {
+    "description": "No active game message"
+  },
+  
+  "totalRolls": "Toplam Atış",
+  "@totalRolls": {
+    "description": "Total rolls label"
+  },
+  
+  "grandTotal": "Genel Toplam",
+  "@grandTotal": {
+    "description": "Grand total label"
+  },
+  
+  "all": "Tümü",
+  "@all": {
+    "description": "All tab"
+  },
+  
+  "noRollsYet": "Henüz atış yok",
+  "@noRollsYet": {
+    "description": "No rolls yet message"
+  },
+  
+  "rolls": "Atış",
+  "@rolls": {
+    "description": "Rolls label"
+  },
+  
+  "noSavedGames": "Henüz kayıtlı oyun yok",
+  "@noSavedGames": {
+    "description": "No saved games message"
+  },
+  
+  "saveGameHint": "Oyun bittiğinde kaydet butonuna basın",
+  "@saveGameHint": {
+    "description": "Save game hint"
+  },
+  
+  "deleteGame": "Oyunu Sil",
+  "@deleteGame": {
+    "description": "Delete game title"
+  },
+  
+  "deleteGameConfirm": "\"{name}\" oyununu silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz.",
+  "@deleteGameConfirm": {
+    "description": "Delete game confirmation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "cancel": "İptal",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  
+  "delete": "Sil",
+  "@delete": {
+    "description": "Delete button"
+  },
+  
+  "gameDeleted": "Oyun silindi",
+  "@gameDeleted": {
+    "description": "Game deleted message"
+  },
+  
+  "leaderboard": "Skor Tablosu",
+  "@leaderboard": {
+    "description": "Leaderboard title"
+  },
+  
+  "noRollInfo": "Atış bilgisi bulunamadı",
+  "@noRollInfo": {
+    "description": "No roll info message"
+  },
+  
+  "welcomeToZarPro": "Zar Pro'ya Hoş Geldiniz!",
+  "@welcomeToZarPro": {
+    "description": "Welcome message"
+  },
+  
+  "professionalDiceExperience": "Profesyonel zar atma deneyimi",
+  "@professionalDiceExperience": {
+    "description": "Professional dice experience"
+  },
+  
+  "guideDescription": "Bu kılavuz, uygulamayı en verimli şekilde kullanmanız için hazırlanmıştır. Aşağıdaki bölümleri inceleyerek tüm özellikleri keşfedin!",
+  "@guideDescription": {
+    "description": "Guide description"
+  },
+  
+  "quickStart": "Hızlı Başlangıç",
+  "@quickStart": {
+    "description": "Quick start section"
+  },
+  
+  "selectDiceCount": "Zar Sayısını Seçin",
+  "@selectDiceCount": {
+    "description": "Select dice count step"
+  },
+  
+  "selectDiceCountDesc": "Ana ekranda 1-6 arasında kaç zar atacağınızı seçin.",
+  "@selectDiceCountDesc": {
+    "description": "Select dice count description"
+  },
+  
+  "rollTheDice": "Zar Atın",
+  "@rollTheDice": {
+    "description": "Roll the dice step"
+  },
+  
+  "rollTheDiceDesc": "\"ZAR AT\" butonuna basarak zarları atın ve sonuçları görün.",
+  "@rollTheDiceDesc": {
+    "description": "Roll the dice description"
+  },
+  
+  "trackResults": "Sonuçları Takip Edin",
+  "@trackResults": {
+    "description": "Track results step"
+  },
+  
+  "trackResultsDesc": "Toplam değerinizi ekranda anlık olarak görün.",
+  "@trackResultsDesc": {
+    "description": "Track results description"
+  },
+  
+  "multiplayerMode": "Çok Oyunculu Mod",
+  "@multiplayerMode": {
+    "description": "Multiplayer mode section"
+  },
+  
+  "playerSelection": "Oyuncu Seçimi",
+  "@playerSelection": {
+    "description": "Player selection"
+  },
+  
+  "playerSelectionDesc": "Menü > Yeni Oyun Başlat bölümünden oyuncu sayısını seçebilirsiniz. 0-8 arası oyuncu ekleyebilirsiniz.",
+  "@playerSelectionDesc": {
+    "description": "Player selection description"
+  },
+  
+  "playerNamesTitle": "Oyuncu İsimleri",
+  "@playerNamesTitle": {
+    "description": "Player names title"
+  },
+  
+  "playerNamesDesc": "Her oyuncu için özel isim girebilirsiniz. Boş bırakırsanız \"Oyuncu 1, Oyuncu 2...\" şeklinde varsayılan isimler kullanılır.",
+  "@playerNamesDesc": {
+    "description": "Player names description"
+  },
+  
+  "turnTracking": "Sıra Takibi",
+  "@turnTracking": {
+    "description": "Turn tracking"
+  },
+  
+  "turnTrackingDesc": "Oyun sırasında sıra kimdeyse ekranda o oyuncunun adı görünür. Her atıştan sonra sıra otomatik olarak sonraki oyuncuya geçer.",
+  "@turnTrackingDesc": {
+    "description": "Turn tracking description"
+  },
+  
+  "gameSession": "Oyun Oturumu",
+  "@gameSession": {
+    "description": "Game session section"
+  },
+  
+  "startNewGame": "Yeni Oyun Başlatın",
+  "@startNewGame": {
+    "description": "Start new game step"
+  },
+  
+  "startNewGameDesc": "Menü ikonuna (☰) basın ve \"Yeni Oyun Başlat\" seçeneğini seçin.",
+  "@startNewGameDesc": {
+    "description": "Start new game description"
+  },
+  
+  "setupPlayers": "Oyuncu Ayarlayın",
+  "@setupPlayers": {
+    "description": "Setup players step"
+  },
+  
+  "setupPlayersDesc": "Oyuncu sayısını ve isimlerini ayarlayın, sonra \"OYUNU BAŞLAT\" butonuna basın.",
+  "@setupPlayersDesc": {
+    "description": "Setup players description"
+  },
+  
+  "play": "Oynayın",
+  "@play": {
+    "description": "Play step"
+  },
+  
+  "playDesc": "Sırayla zar atın. Her atış kaydedilir ve oyuncu bazlı istatistikler tutulur.",
+  "@playDesc": {
+    "description": "Play description"
+  },
+  
+  "finishGame": "Oyunu Bitirin",
+  "@finishGame": {
+    "description": "Finish game step"
+  },
+  
+  "finishGameDesc": "Menüden \"Oyunu Bitir\" seçeneği ile oyunu kaydedin veya silin.",
+  "@finishGameDesc": {
+    "description": "Finish game description"
+  },
+  
+  "historyAndRecords": "Geçmiş ve Kayıtlar",
+  "@historyAndRecords": {
+    "description": "History and records section"
+  },
+  
+  "liveHistory": "Anlık Geçmiş",
+  "@liveHistory": {
+    "description": "Live history"
+  },
+  
+  "liveHistoryDesc": "Aktif oyun sırasında \"Geçmiş\" butonuna basarak tüm atışları görebilirsiniz.",
+  "@liveHistoryDesc": {
+    "description": "Live history description"
+  },
+  
+  "savedGamesTitle": "Kayıtlı Oyunlar",
+  "@savedGamesTitle": {
+    "description": "Saved games title in guide"
+  },
+  
+  "savedGamesGuideDesc": "Menü > Kayıtlı Oyunlar bölümünden daha önce kaydettiğiniz tüm oyunlara erişebilirsiniz.",
+  "@savedGamesGuideDesc": {
+    "description": "Saved games guide description"
+  },
+  
+  "playerLogs": "Oyuncu Logları",
+  "@playerLogs": {
+    "description": "Player logs"
+  },
+  
+  "playerLogsDesc": "Kayıtlı oyunların detay sayfasında her oyuncunun ayrı ayrı atışlarını ve toplam puanlarını görebilirsiniz.",
+  "@playerLogsDesc": {
+    "description": "Player logs description"
+  },
+  
+  "settings": "Ayarlar",
+  "@settings": {
+    "description": "Settings section"
+  },
+  
+  "themeChange": "Tema Değiştirme",
+  "@themeChange": {
+    "description": "Theme change"
+  },
+  
+  "themeChangeDesc": "Menüden açık ve koyu tema arasında geçiş yapabilirsiniz. Tercihleriniz otomatik olarak kaydedilir.",
+  "@themeChangeDesc": {
+    "description": "Theme change description"
+  },
+  
+  "tips": "İpuçları",
+  "@tips": {
+    "description": "Tips section"
+  },
+  
+  "tip1": "Tek kişi oynayacaksanız oyuncu sayısını 0 olarak bırakın.",
+  "@tip1": {
+    "description": "Tip 1"
+  },
+  
+  "tip2": "Oyunu bitirmeden kapatsanız bile aktif oyununuz kaybolmaz.",
+  "@tip2": {
+    "description": "Tip 2"
+  },
+  
+  "tip3": "Kayıtlı oyunları silmek için listedeki silme ikonuna basın.",
+  "@tip3": {
+    "description": "Tip 3"
+  },
+  
+  "tip4": "Titreşim geri bildirimi ile zarları atarken gerçekçi bir deneyim yaşayın.",
+  "@tip4": {
+    "description": "Tip 4"
+  },
+  
+  "yes": "Evet",
+  "@yes": {
+    "description": "Yes button"
+  },
+  
+  "newGameButton": "Yeni Oyun",
+  "@newGameButton": {
+    "description": "New game button tooltip"
+  },
+  
+  "historyButton": "Geçmiş",
+  "@historyButton": {
+    "description": "History button tooltip"
+  },
+  
+  "savedGamesButton": "Kayıtlı Oyunlar",
+  "@savedGamesButton": {
+    "description": "Saved games button tooltip"
+  },
+  
+  "menuButton": "Menü",
+  "@menuButton": {
+    "description": "Menu button tooltip"
+  }
+}
