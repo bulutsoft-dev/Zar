@@ -637,6 +637,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showEndSessionDialog(BuildContext context, SessionProvider sessionProvider) {
+    final l10n = AppLocalizations.of(context)!;
     final TextEditingController nameController = TextEditingController(
       text: sessionProvider.currentSession?.name ?? '',
     );
@@ -645,14 +646,14 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AppDialog(
-        title: 'Oyunu Bitir',
+        title: l10n.endGameTitle,
         icon: Icons.stop_circle_outlined,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Bu oyunu kaydetmek istiyor musunuz?',
+              l10n.endGameQuestion,
               style: TextStyle(
                 fontSize: 16,
                 color: isDark ? Colors.white.withOpacity(0.8) : AppColors.textDark,
@@ -665,7 +666,7 @@ class SettingsScreen extends StatelessWidget {
                 color: isDark ? Colors.white : AppColors.textDark,
               ),
               decoration: InputDecoration(
-                labelText: 'Oyun Adı',
+                labelText: l10n.gameName,
                 labelStyle: TextStyle(
                   color: isDark
                       ? Colors.white.withOpacity(0.6)
@@ -698,11 +699,11 @@ class SettingsScreen extends StatelessWidget {
               Navigator.pop(context); // Close settings screen too
               AppSnackBar.show(
                 context: context,
-                message: 'Oyun kaydedilmeden silindi',
+                message: l10n.gameDeletedWithoutSaving,
                 icon: Icons.delete_outline,
               );
             },
-            text: 'Kaydetme',
+            text: l10n.dontSave,
           ),
           AppButton(
             onPressed: () async {
@@ -712,14 +713,14 @@ class SettingsScreen extends StatelessWidget {
                 Navigator.pop(context); // Close settings screen too
                 AppSnackBar.show(
                   context: context,
-                  message: 'Oyun kaydedildi!',
+                  message: l10n.gameSaved,
                   isSuccess: true,
                 );
               }
               // Session kaydedildikten sonra interstitial reklam göster
               await AdService.showInterstitialAd();
             },
-            text: 'Kaydet',
+            text: l10n.save,
             icon: Icons.save,
           ),
         ],
@@ -728,10 +729,12 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showAboutDialog(BuildContext context, bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     showDialog(
       context: context,
       builder: (context) => AppDialog(
-        title: 'Hakkında',
+        title: l10n.aboutTitle,
         icon: Icons.info_outline,
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -754,7 +757,7 @@ class SettingsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppConstants.appName,
+                      l10n.appName,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -762,7 +765,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Versiyon 1.0.0',
+                      l10n.version,
                       style: TextStyle(
                         fontSize: 12,
                         color: isDark
@@ -776,7 +779,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Profesyonel zar atma uygulaması. Arkadaşlarınızla oyun oynayın, sonuçları kaydedin ve istatistiklerinizi takip edin.',
+              l10n.aboutDescription,
               style: TextStyle(
                 fontSize: 14,
                 color: isDark ? Colors.white.withOpacity(0.7) : AppColors.textDark,
@@ -798,7 +801,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Bulutsoft tarafından geliştirilmiştir',
+                      l10n.developedBy,
                       style: TextStyle(
                         fontSize: 13,
                         color: isDark ? Colors.white.withOpacity(0.7) : AppColors.textDark,
@@ -813,7 +816,7 @@ class SettingsScreen extends StatelessWidget {
         actions: [
           AppButton(
             onPressed: () => Navigator.pop(context),
-            text: 'Tamam',
+            text: l10n.ok,
           ),
         ],
       ),
@@ -864,6 +867,7 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final themeProvider = Provider.of<ThemeProvider>(context);
     final sessionProvider = Provider.of<SessionProvider>(context);
     final isDark = themeProvider.isDarkMode;
@@ -932,7 +936,7 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Yeni Oyun',
+                      l10n.newGameTitle,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -951,17 +955,17 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Player count selector
-                      _buildSectionTitle('Oyuncu Sayısı', Icons.people, isDark),
+                      _buildSectionTitle(l10n.playerCount, Icons.people, isDark),
                       const SizedBox(height: 12),
                       _buildPlayerCountSelector(isDark),
                       const SizedBox(height: 24),
 
                       // Player names
                       if (playerCount > 0) ...[
-                        _buildSectionTitle('Oyuncu İsimleri (Opsiyonel)', Icons.person, isDark),
+                        _buildSectionTitle(l10n.playerNames, Icons.person, isDark),
                         const SizedBox(height: 4),
                         Text(
-                          'Boş bırakabilirsiniz, varsayılan isimler kullanılacak',
+                          l10n.playerNamesHint,
                           style: TextStyle(
                             fontSize: 12,
                             color: isDark
@@ -1002,8 +1006,8 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
                     AppSnackBar.show(
                       context: context,
                       message: playerCount > 0
-                          ? 'Oyun $playerCount oyuncu ile başlatıldı!'
-                          : 'Yeni oyun başlatıldı!',
+                          ? l10n.gameStartedWithPlayers(playerCount)
+                          : l10n.gameStarted,
                       isSuccess: true,
                     );
                   },
@@ -1023,14 +1027,14 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
                         ),
                       ],
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.play_arrow, color: Colors.white, size: 28),
-                        SizedBox(width: 12),
+                        const Icon(Icons.play_arrow, color: Colors.white, size: 28),
+                        const SizedBox(width: 12),
                         Text(
-                          'OYUNU BAŞLAT',
-                          style: TextStyle(
+                          l10n.startGame,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -1072,6 +1076,8 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
   }
 
   Widget _buildPlayerCountSelector(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1205,8 +1211,8 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
           const SizedBox(height: 12),
           Text(
             playerCount == 0
-                ? 'Tek kişilik mod (oyuncu takibi yok)'
-                : '$playerCount oyuncu',
+                ? l10n.singlePlayerMode
+                : l10n.playersCount(playerCount),
             style: TextStyle(
               fontSize: 14,
               color: isDark
@@ -1220,6 +1226,8 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
   }
 
   Widget _buildPlayerNameField(int index, bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: TextField(
@@ -1228,8 +1236,8 @@ class _NewGameSetupScreenState extends State<NewGameSetupScreen> {
           color: isDark ? Colors.white : AppColors.textDark,
         ),
         decoration: InputDecoration(
-          labelText: 'Oyuncu ${index + 1}',
-          hintText: 'Oyuncu ${index + 1}',
+          labelText: l10n.player(index + 1),
+          hintText: l10n.player(index + 1),
           labelStyle: TextStyle(
             color: isDark
                 ? Colors.white.withOpacity(0.6)
