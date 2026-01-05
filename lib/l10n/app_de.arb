@@ -120,5 +120,8 @@
   "savedGamesButton": "Gespeicherte Spiele",
   "menuButton": "Menü",
   "selectLanguage": "Sprache auswählen",
-  "selectLanguageDesc": "Bitte wählen Sie Ihre bevorzugte Sprache"
+  "selectLanguageDesc": "Bitte wählen Sie Ihre bevorzugte Sprache",
+  "spanish": "Español",
+  "arabic": "العربية",
+  "russian": "Русский"
 }

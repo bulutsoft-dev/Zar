@@ -1,7 +1,7 @@
 # Localization System Implementation
 
 ## Overview
-A professional localization system has been implemented for the Zar Pro app with Turkish as the default language and English support.
+A professional localization system has been implemented for the Zar Pro app with support for multiple languages. The app supports Turkish (default), English, German, Spanish, Arabic, and Russian.
 
 ## Architecture
 
@@ -14,8 +14,12 @@ A professional localization system has been implemented for the Zar Pro app with
 - Default language: Turkish (`tr`)
 
 #### ARB Files (`lib/l10n/`)
-- `app_tr.arb` - Turkish translations (default)
+- `app_tr.arb` - Turkish translations (default/template)
 - `app_en.arb` - English translations
+- `app_de.arb` - German translations
+- `app_es.arb` - Spanish translations
+- `app_ar.arb` - Arabic translations
+- `app_ru.arb` - Russian translations
 - Contains all app strings with placeholders for dynamic content
 
 #### Configuration Files
@@ -44,6 +48,10 @@ MultiProvider(
         supportedLocales: const [
           Locale('tr', ''), // Turkish
           Locale('en', ''), // English
+          Locale('de', ''), // German
+          Locale('es', ''), // Spanish
+          Locale('ar', ''), // Arabic
+          Locale('ru', ''), // Russian
         ],
         // ...
       );
@@ -63,10 +71,12 @@ Text(l10n.rollsCount(count))  // String with number
 
 ### 3. Language Selector
 
-Located in Settings screen (`lib/screens/settings_screen.dart`):
-- Toggle between Turkish (TR) and English (EN)
+Located in Language Selection Dialog (`lib/widgets/language_selection_dialog.dart`):
+- Select between Turkish (🇹🇷), English (🇬🇧), German (🇩🇪), Spanish (🇪🇸), Arabic (🇸🇦), and Russian (🇷🇺)
+- Beautiful dialog with language flags and native names
 - Instantly updates all app text
 - Selection is persisted across app restarts
+- Shows automatically on first launch
 
 ### 4. Localized Screens
 
@@ -84,7 +94,16 @@ Located in Settings screen (`lib/screens/settings_screen.dart`):
 - Session Detail Screen
 - How to Use Screen
 
-### 5. Features
+### 5. Supported Languages
+
+- 🇹🇷 **Turkish (Türkçe)** - Default language, complete translations
+- 🇬🇧 **English** - Complete translations  
+- 🇩🇪 **German (Deutsch)** - Complete translations
+- 🇪🇸 **Spanish (Español)** - Complete translations
+- 🇸🇦 **Arabic (العربية)** - Complete translations with RTL support
+- 🇷🇺 **Russian (Русский)** - Complete translations
+
+### 6. Features
 
 - **Automatic Locale Detection**: Falls back to Turkish if system language is not supported
 - **Persistent Selection**: User's language choice is saved
@@ -125,10 +144,14 @@ flutter build appbundle --release
 ## Adding New Languages
 
 1. Create a new ARB file: `lib/l10n/app_[language_code].arb`
-2. Copy content from `app_tr.arb` or `app_en.arb`
-3. Translate all strings
+2. Copy content from `app_en.arb` as a template (simple key-value pairs)
+3. Translate all 123 strings to the new language
 4. Add the locale to `supportedLocales` in `main.dart`
-5. Update the language selector in `settings_screen.dart`
+5. Update the `toggleLanguage()` method in `language_provider.dart`
+6. Add language option to `language_selection_dialog.dart` with appropriate flag emoji
+7. Add helper methods (`isLanguageName`) in `language_provider.dart`
+8. Update `currentLanguageName` getter in `language_provider.dart`
+9. Run `flutter gen-l10n` to generate localization code
 
 ## Adding New Strings
 

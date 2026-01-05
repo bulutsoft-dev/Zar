@@ -120,5 +120,8 @@
   "menuButton": "Menu",
   "german": "Deutsch",
   "selectLanguage": "Select Language",
-  "selectLanguageDesc": "Please select your preferred language"
+  "selectLanguageDesc": "Please select your preferred language",
+  "spanish": "Español",
+  "arabic": "العربية",
+  "russian": "Русский"
 }
