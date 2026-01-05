@@ -634,5 +634,20 @@
   "selectLanguageDesc": "Lütfen tercih ettiğiniz dili seçin",
   "@selectLanguageDesc": {
     "description": "Select language description"
+  },
+  
+  "spanish": "Español",
+  "@spanish": {
+    "description": "Spanish language"
+  },
+  
+  "arabic": "العربية",
+  "@arabic": {
+    "description": "Arabic language"
+  },
+  
+  "russian": "Русский",
+  "@russian": {
+    "description": "Russian language"
   }
 }

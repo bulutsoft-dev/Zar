@@ -44,7 +44,7 @@ class LanguageProvider extends ChangeNotifier {
     await prefs.setBool(_firstLaunchKey, true);
   }
   
-  /// Toggle between languages (cycles through Turkish, English, German)
+  /// Toggle between languages (cycles through Turkish, English, German, Spanish, Arabic, Russian)
   Future<void> toggleLanguage() async {
     String newLanguage;
     switch (_locale.languageCode) {
@@ -55,6 +55,15 @@ class LanguageProvider extends ChangeNotifier {
         newLanguage = 'de';
         break;
       case 'de':
+        newLanguage = 'es';
+        break;
+      case 'es':
+        newLanguage = 'ar';
+        break;
+      case 'ar':
+        newLanguage = 'ru';
+        break;
+      case 'ru':
         newLanguage = 'tr';
         break;
       default:
@@ -72,6 +81,15 @@ class LanguageProvider extends ChangeNotifier {
   /// Check if current language is German
   bool get isGerman => _locale.languageCode == 'de';
   
+  /// Check if current language is Spanish
+  bool get isSpanish => _locale.languageCode == 'es';
+  
+  /// Check if current language is Arabic
+  bool get isArabic => _locale.languageCode == 'ar';
+  
+  /// Check if current language is Russian
+  bool get isRussian => _locale.languageCode == 'ru';
+  
   /// Get current language name
   String get currentLanguageName {
     switch (_locale.languageCode) {
@@ -81,6 +99,12 @@ class LanguageProvider extends ChangeNotifier {
         return 'English';
       case 'de':
         return 'Deutsch';
+      case 'es':
+        return 'Español';
+      case 'ar':
+        return 'العربية';
+      case 'ru':
+        return 'Русский';
       default:
         return 'Türkçe';
     }
