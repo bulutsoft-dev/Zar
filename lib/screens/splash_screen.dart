@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
 import '../utils/app_colors.dart';
-import '../utils/constants.dart';
 import '../services/ad_service.dart';
 import 'home_screen.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 /// Splash screen with animation
 class SplashScreen extends StatefulWidget {
@@ -118,6 +118,8 @@ class _SplashScreenState extends State<SplashScreen>
   
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -192,7 +194,7 @@ class _SplashScreenState extends State<SplashScreen>
                         ],
                       ).createShader(bounds),
                       child: Text(
-                        AppConstants.appName,
+                        l10n.appName,
                         style: const TextStyle(
                           fontSize: 52,
                           fontWeight: FontWeight.w900,
@@ -213,7 +215,7 @@ class _SplashScreenState extends State<SplashScreen>
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: Text(
-                      AppConstants.appSubtitle,
+                      l10n.appSubtitle,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white.withOpacity(0.7),
@@ -227,7 +229,7 @@ class _SplashScreenState extends State<SplashScreen>
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: Text(
-                      'by ${AppConstants.companyName}',
+                      l10n.byCompany(l10n.companyName),
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white.withOpacity(0.5),

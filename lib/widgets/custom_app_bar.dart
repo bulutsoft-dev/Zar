@@ -3,12 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
+import '../providers/language_provider.dart';
 import '../services/ad_service.dart';
 import '../utils/app_colors.dart';
-import '../utils/constants.dart';
 import '../screens/saved_sessions_screen.dart';
 import '../screens/settings_screen.dart';
 import '../widgets/app_dialog.dart';
+import '../widgets/language_selection_dialog.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 /// Custom app bar widget with navigation and theme controls
 class CustomAppBar extends StatelessWidget {
@@ -23,6 +25,7 @@ class CustomAppBar extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final themeProvider = Provider.of<ThemeProvider>(context);
     final sessionProvider = Provider.of<SessionProvider>(context);
     final isDark = themeProvider.isDarkMode;
@@ -73,7 +76,7 @@ class CustomAppBar extends StatelessWidget {
                 const SizedBox(width: 10),
                 Flexible(
                   child: Text(
-                    AppConstants.appName,
+                    l10n.appName,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -95,14 +98,14 @@ class CustomAppBar extends StatelessWidget {
                   icon: Icons.stop_circle_outlined,
                   onPressed: () => _showEndSessionDialog(context),
                   isDark: isDark,
-                  tooltip: 'Oyunu Bitir',
+                  tooltip: l10n.endGame,
                 )
               else
                 _buildIconButton(
                   icon: Icons.play_circle_outline,
                   onPressed: onNewGamePressed,
                   isDark: isDark,
-                  tooltip: 'Yeni Oyun',
+                  tooltip: l10n.newGameButton,
                 ),
               const SizedBox(width: 4),
               // History button (only visible when session is active)
@@ -111,7 +114,7 @@ class CustomAppBar extends StatelessWidget {
                   icon: Icons.history,
                   onPressed: onHistoryPressed,
                   isDark: isDark,
-                  tooltip: 'Geçmiş',
+                  tooltip: l10n.historyButton,
                 ),
               // Saved sessions button
               _buildIconButton(
@@ -125,8 +128,11 @@ class CustomAppBar extends StatelessWidget {
                   );
                 },
                 isDark: isDark,
-                tooltip: 'Kayıtlı Oyunlar',
+                tooltip: l10n.savedGamesButton,
               ),
+              const SizedBox(width: 4),
+              // Language selector button
+              _buildLanguageButton(context, isDark),
               const SizedBox(width: 4),
               // Menu button (replaced theme toggle and bulutsoft branding)
               _buildIconButton(
@@ -141,7 +147,7 @@ class CustomAppBar extends StatelessWidget {
                   );
                 },
                 isDark: isDark,
-                tooltip: 'Menü',
+                tooltip: l10n.menuButton,
               ),
             ],
           ),
@@ -172,7 +178,40 @@ class CustomAppBar extends StatelessWidget {
     );
   }
   
+  Widget _buildLanguageButton(BuildContext context, bool isDark) {
+    final languageProvider = Provider.of<LanguageProvider>(context);
+    
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        showDialog(
+          context: context,
+          builder: (context) => const LanguageSelectionDialog(isFirstLaunch: false),
+        );
+      },
+      child: Container(
+        constraints: const BoxConstraints(
+          minWidth: 40,
+          minHeight: 40,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Center(
+          child: Text(
+            languageProvider.locale.languageCode.toUpperCase(),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : AppColors.textDark,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  
   void _showEndSessionDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
     final TextEditingController nameController = TextEditingController(
       text: sessionProvider.currentSession?.name ?? '',
@@ -182,14 +221,14 @@ class CustomAppBar extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AppDialog(
-        title: 'Oyunu Bitir',
+        title: l10n.endGameTitle,
         icon: Icons.stop_circle_outlined,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Bu oyunu kaydetmek istiyor musunuz?',
+              l10n.endGameQuestion,
               style: TextStyle(
                 fontSize: 16,
                 color: isDark ? Colors.white.withOpacity(0.8) : AppColors.textDark,
@@ -202,7 +241,7 @@ class CustomAppBar extends StatelessWidget {
                 color: isDark ? Colors.white : AppColors.textDark,
               ),
               decoration: InputDecoration(
-                labelText: 'Oyun Adı',
+                labelText: l10n.gameName,
                 labelStyle: TextStyle(
                   color: isDark
                       ? Colors.white.withOpacity(0.6)
@@ -234,11 +273,11 @@ class CustomAppBar extends StatelessWidget {
               Navigator.pop(context);
               AppSnackBar.show(
                 context: context,
-                message: 'Oyun kaydedilmeden silindi',
+                message: l10n.gameDeletedWithoutSaving,
                 icon: Icons.delete_outline,
               );
             },
-            text: 'Kaydetme',
+            text: l10n.dontSave,
           ),
           AppButton(
             onPressed: () async {
@@ -249,14 +288,14 @@ class CustomAppBar extends StatelessWidget {
                 Navigator.pop(context);
                 AppSnackBar.show(
                   context: context,
-                  message: 'Oyun kaydedildi!',
+                  message: l10n.gameSaved,
                   isSuccess: true,
                 );
               }
               // Session kaydedildikten sonra interstitial reklam göster
               await AdService.showInterstitialAd();
             },
-            text: 'Kaydet',
+            text: l10n.save,
             icon: Icons.save,
           ),
         ],

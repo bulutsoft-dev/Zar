@@ -5,14 +5,17 @@ import 'dart:async';
 import 'dart:math';
 import '../providers/theme_provider.dart';
 import '../providers/session_provider.dart';
+import '../providers/language_provider.dart';
 import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import '../widgets/dice_widget.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/app_dialog.dart';
 import '../widgets/banner_ad_widget.dart';
+import '../widgets/language_selection_dialog.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
+import 'package:zar/l10n/app_localizations.dart';
 
 /// Main home screen with dice rolling
 class HomeScreen extends StatefulWidget {
@@ -37,6 +40,22 @@ class _HomeScreenState extends State<HomeScreen>
       duration: AppConstants.shakeAnimationDuration,
       vsync: this,
     );
+    
+    // Show language selection dialog on first launch
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkFirstLaunch();
+    });
+  }
+  
+  void _checkFirstLaunch() {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    if (languageProvider.isFirstLaunch) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LanguageSelectionDialog(isFirstLaunch: true),
+      );
+    }
   }
   
   @override
@@ -203,6 +222,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
   
   Widget _buildSessionIndicator(bool isDark, SessionProvider sessionProvider) {
+    final l10n = AppLocalizations.of(context)!;
     final currentPlayer = sessionProvider.currentPlayer;
     final hasPlayers = sessionProvider.hasPlayers;
     
@@ -241,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen>
               children: [
                 if (hasPlayers && currentPlayer != null) ...[
                   Text(
-                    'Sıra: ${currentPlayer.name}',
+                    l10n.turn(currentPlayer.name),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -249,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   Text(
-                    '${sessionProvider.currentSession?.totalRolls ?? 0} atış • ${sessionProvider.currentPlayers.length} oyuncu',
+                    '${l10n.rollsCount(sessionProvider.currentSession?.totalRolls ?? 0)} • ${l10n.playersCount(sessionProvider.currentPlayers.length)}',
                     style: TextStyle(
                       fontSize: 11,
                       color: isDark 
@@ -259,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ] else ...[
                   Text(
-                    sessionProvider.currentSession?.name ?? 'Oyun',
+                    sessionProvider.currentSession?.name ?? l10n.game,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -268,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen>
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    '${sessionProvider.currentSession?.totalRolls ?? 0} atış',
+                    l10n.rollsCount(sessionProvider.currentSession?.totalRolls ?? 0),
                     style: TextStyle(
                       fontSize: 11,
                       color: isDark 
@@ -303,6 +323,8 @@ class _HomeScreenState extends State<HomeScreen>
   }
   
   Widget _buildDiceSelector(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
@@ -342,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               const SizedBox(width: 8),
               Text(
-                'ZAR SAYISI',
+                l10n.diceCount,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -429,6 +451,8 @@ class _HomeScreenState extends State<HomeScreen>
   }
   
   Widget _buildTotalDisplay(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -460,7 +484,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           const SizedBox(width: 12),
           Text(
-            'TOPLAM',
+            l10n.total,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -493,6 +517,8 @@ class _HomeScreenState extends State<HomeScreen>
   }
   
   Widget _buildRollButton(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: GestureDetector(
@@ -544,7 +570,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               const SizedBox(width: 12),
               Text(
-                isRolling ? 'ATILIYOR...' : 'ZAR AT',
+                isRolling ? l10n.rolling : l10n.rollDice,
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,

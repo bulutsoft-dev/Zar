@@ -1,9 +1,9 @@
 /// Application constants
 class AppConstants {
-  // App info
+  // App info - These are overridden by localization in UI
   static const String appName = 'ZAR PRO';
   static const String companyName = 'Bulutsoft';
-  static const String appSubtitle = 'Premium Dice Experience';
+  static const String appSubtitle = 'PROFESYONEL';
   
   // Session settings
   static const int maxRollHistory = 50;
