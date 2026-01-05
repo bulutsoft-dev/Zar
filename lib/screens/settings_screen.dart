@@ -7,6 +7,8 @@ import '../providers/language_provider.dart';
 import '../services/ad_service.dart';
 import '../utils/app_colors.dart';
 import '../widgets/app_dialog.dart';
+import '../widgets/language_selection_dialog.dart';
+import '../widgets/banner_ad_widget.dart';
 import 'saved_sessions_screen.dart';
 import 'how_to_use_screen.dart';
 import 'package:zar/l10n/app_localizations.dart';
@@ -132,10 +134,15 @@ class SettingsScreen extends StatelessWidget {
                         isDark: isDark,
                         onTap: () => _showAboutDialog(context, isDark),
                       ),
+                      
+                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
               ),
+              
+              // Banner Ad
+              const BannerAdWidget(),
             ],
           ),
         ),
@@ -491,146 +498,82 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildLanguageSelector(BuildContext context, LanguageProvider languageProvider, bool isDark) {
     final l10n = AppLocalizations.of(context)!;
     
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [
-                  Colors.white.withOpacity(0.08),
-                  Colors.white.withOpacity(0.04),
-                ]
-              : [
-                  Colors.black.withOpacity(0.04),
-                  Colors.black.withOpacity(0.02),
-                ],
-        ),
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withOpacity(0.1)
-              : Colors.black.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.highlightColor.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(0),
-            ),
-            child: Icon(
-              Icons.language,
-              color: AppColors.highlightColor,
-              size: 22,
-            ),
+    return InkWell(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        showDialog(
+          context: context,
+          builder: (context) => const LanguageSelectionDialog(),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isDark
+                ? [
+                    Colors.white.withOpacity(0.08),
+                    Colors.white.withOpacity(0.04),
+                  ]
+                : [
+                    Colors.black.withOpacity(0.04),
+                    Colors.black.withOpacity(0.02),
+                  ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.language,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : AppColors.textDark,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  l10n.languageDesc,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isDark
-                        ? Colors.white.withOpacity(0.5)
-                        : AppColors.textDark.withOpacity(0.5),
-                  ),
-                ),
-              ],
-            ),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withOpacity(0.1)
+                : Colors.black.withOpacity(0.1),
+            width: 1,
           ),
-          // Language toggle buttons
-          Container(
-            decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.1),
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withOpacity(0.2)
-                    : Colors.black.withOpacity(0.2),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.highlightColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(0),
+              ),
+              child: Icon(
+                Icons.language,
+                color: AppColors.highlightColor,
+                size: 22,
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildLanguageButton(
-                  text: 'TR',
-                  isSelected: languageProvider.isTurkish,
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    languageProvider.setLanguage('tr');
-                  },
-                  isDark: isDark,
-                ),
-                _buildLanguageButton(
-                  text: 'EN',
-                  isSelected: languageProvider.isEnglish,
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    languageProvider.setLanguage('en');
-                  },
-                  isDark: isDark,
-                ),
-                _buildLanguageButton(
-                  text: 'DE',
-                  isSelected: languageProvider.isGerman,
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    languageProvider.setLanguage('de');
-                  },
-                  isDark: isDark,
-                ),
-              ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.language,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : AppColors.textDark,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    languageProvider.currentLanguageName,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark
+                          ? Colors.white.withOpacity(0.5)
+                          : AppColors.textDark.withOpacity(0.5),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLanguageButton({
-    required String text,
-    required bool isSelected,
-    required VoidCallback onTap,
-    required bool isDark,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          gradient: isSelected
-              ? const LinearGradient(
-                  colors: [AppColors.highlightColor, AppColors.neonPurple],
-                )
-              : null,
-          color: isSelected ? null : Colors.transparent,
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: isSelected
-                ? Colors.white
-                : isDark
-                    ? Colors.white.withOpacity(0.6)
-                    : AppColors.textDark.withOpacity(0.6),
-          ),
+            Icon(
+              Icons.chevron_right,
+              color: isDark
+                  ? Colors.white.withOpacity(0.3)
+                  : AppColors.textDark.withOpacity(0.3),
+            ),
+          ],
         ),
       ),
     );
